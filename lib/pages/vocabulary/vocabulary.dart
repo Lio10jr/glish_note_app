@@ -1,0 +1,244 @@
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_database/firebase_database.dart';
+import 'package:flutter/material.dart';
+import 'package:glish_note_app/pages/vocabulary/add_vocabulary_page.dart';
+import 'package:glish_note_app/pages/vocabulary/edit_vocabulary_page.dart';
+import 'package:glish_note_app/shared/consts/colors.dart';
+import 'package:glish_note_app/shared/models/vocabulary_note.dart';
+import 'package:glish_note_app/shared/services/app_state.dart';
+import 'package:glish_note_app/shared/widgets/title_icon.dart';
+
+class Vocabulary extends StatefulWidget {
+  const Vocabulary({super.key});
+
+  @override
+  Statevocabulary createState() => Statevocabulary();
+}
+
+List<VocabularyNote> dataVocabularyList = [];
+
+class Statevocabulary extends State<Vocabulary> {
+  final int _currentSortColumn = 0;
+  final bool _isSortAsc = true;
+  final TextEditingController _textBuscar = TextEditingController();
+  final user = FirebaseAuth.instance.currentUser!;
+  List misnotas = [];
+
+  //database
+  late final dref = FirebaseDatabase.instance.ref();
+  late DatabaseReference databaseReferent;
+  late List listBuscar =
+      [] as List<VocabularyNote>;
+  DatabaseReference refbase =
+      FirebaseDatabase.instance.ref().child("VocabularyNote");
+
+  @override
+  Widget build(BuildContext context) {
+    
+    return GestureDetector(
+      onTap: () {
+        FocusScope.of(context).requestFocus(FocusNode());
+      },
+      child: Scaffold(
+        appBar: const PreferredSize(
+          preferredSize: Size.fromHeight(300.0),
+          child: TitleIcon(titulo: "Todo tu vocabulario esta aqui!",),
+        ),
+        body: Stack(
+          children: [
+            Container(
+              margin: const EdgeInsets.only(top: 10, left: 10, right: 10),
+              decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(20),
+                  color: ColorsConsts.primarybackground),
+              child: TextField(
+                controller: _textBuscar,
+                onChanged: (val) {
+                  setState(() {
+                    listBuscar = misnotas
+                        .where((element) {
+                          final inglesPalabra = element.ingles
+                            .toLowerCase()
+                            .contains(val.toLowerCase());
+                          final espaPalabra = element.espanish
+                            .toLowerCase()
+                            .contains(val.toLowerCase());
+                            return inglesPalabra || espaPalabra;
+                        })
+                        .toList();
+                  });
+                },
+                decoration: InputDecoration(
+                    suffixIcon: IconButton(
+                      icon: const Icon(Icons.clear),
+                      onPressed: () {
+                        setState(() {
+                          _textBuscar.clear();
+                        });
+                      },
+                    ),
+                    border: InputBorder.none,
+                    errorBorder: InputBorder.none,
+                    enabledBorder: InputBorder.none,
+                    focusedBorder: InputBorder.none,
+                    contentPadding: const EdgeInsets.all(15),
+                    hintText: 'Search'),
+              ),
+            ),
+            Container(
+              margin: const EdgeInsets.only(top:80),
+              padding:
+                  const EdgeInsets.only(right: 10, left: 10),
+              decoration: const BoxDecoration(
+                borderRadius: BorderRadius.all(Radius.circular(30),),
+              ),
+              child: FutureBuilder(
+                future: AppState().obtenerVocabulario(user.email!),
+                builder: (BuildContext context, AsyncSnapshot<List> snapshot) {
+                  misnotas = snapshot.data ?? [];
+                  return ListView(children: [
+                    DataTable(
+                      horizontalMargin: 7,
+                      columnSpacing: 0,
+                      sortColumnIndex: _currentSortColumn,
+                      sortAscending: _isSortAsc,
+                      border: const TableBorder(
+                          horizontalInside: BorderSide(width: 1)),
+                      headingRowColor: MaterialStateColor.resolveWith(
+                          (states) => ColorsConsts.endColor),
+                      columns: const <DataColumn>[
+                        DataColumn(
+                          label: Text(
+                            "Ingles",
+                            style: TextStyle(fontStyle: FontStyle.italic),
+                          ),
+                        ),
+                        DataColumn(
+                          label: Text(
+                            "Español",
+                            style: TextStyle(fontStyle: FontStyle.italic),
+                          ),
+                        ),
+                        DataColumn(
+                          label: Text(
+                            "Pronunciación",
+                            style: TextStyle(fontStyle: FontStyle.italic),
+                          ),
+                        ),
+                        DataColumn(
+                          label: Text("Act.",
+                              style: TextStyle(fontStyle: FontStyle.italic)),
+                        ),
+                      ],
+                      rows: [
+                        if (_textBuscar.text.isNotEmpty)
+                          for (VocabularyNote nota in listBuscar)
+                            DataRow(
+                              selected: true,
+                              cells: <DataCell>[
+                                DataCell(
+                                  Text(nota.ingles),
+                                ),
+                                DataCell(Text(nota.espanish)),
+                                DataCell(Text(nota.pronunciacion)),
+                                DataCell(Row(
+                                  children: [
+                                    SizedBox(
+                                      width: 20,
+                                      child: IconButton(
+                                        padding: EdgeInsets.zero,
+                                        icon: Icon(
+                                          Icons.edit,
+                                          color: ColorsConsts.primarybackground,
+                                          size: 20,
+                                        ),
+                                        onPressed: () async{
+                                          Navigator.push(context,
+                                            MaterialPageRoute(builder: (context) => EditVocabularyPage(objVocabulario: nota,)));
+                                        },
+                                      ),
+                                    ),
+                                    SizedBox(
+                                      width: 20,
+                                      child: IconButton(
+                                        padding: EdgeInsets.zero,
+                                        icon: Icon(
+                                          Icons.delete,
+                                          color: Colors.red.shade300,
+                                          size: 20,
+                                        ),
+                                        onPressed: () async {
+                                          await AppState().deleteVocabulario(nota.key);
+                                        },
+                                      ),
+                                    ),
+                                  ],
+                                ))
+                              ],
+                            ),
+                        if (_textBuscar.text.isEmpty)
+                          for (VocabularyNote nota in misnotas)
+                            DataRow(
+                              cells: <DataCell>[
+                                DataCell(Text(nota.ingles)),
+                                DataCell(Text(nota.espanish)),
+                                DataCell(Text(nota.pronunciacion)),
+                                DataCell(Row(
+                                  children: [
+                                    SizedBox(
+                                      width: 20,
+                                      child: IconButton(
+                                        padding: EdgeInsets.zero,
+                                        icon: Icon(
+                                          Icons.edit,
+                                          color: ColorsConsts.primarybackground,
+                                          size: 20,
+                                        ),
+                                        onPressed: () {
+                                          Navigator.push(context,
+                                            MaterialPageRoute(builder: (context) => EditVocabularyPage(objVocabulario: nota,)));
+                                        },
+                                      ),
+                                    ),
+                                    SizedBox(
+                                      width: 20,
+                                      child: IconButton(
+                                        padding: EdgeInsets.zero,
+                                        icon: Icon(
+                                          Icons.delete,
+                                          color: Colors.red.shade300,
+                                          size: 20,
+                                        ),
+                                        onPressed: () async{
+                                          await AppState().deleteVocabulario(nota.key);
+                                        },
+                                      ),
+                                    ),
+                                  ],
+                                ))
+                              ],
+                            ),
+                      ],
+                    ),
+                  ]);
+                },
+              ),
+            ),
+          ],
+        ),
+        floatingActionButton: FloatingActionButton(
+          splashColor: Colors.orange.shade200,
+          backgroundColor: ColorsConsts.primarybackground,
+          child: const Icon(
+            Icons.add,
+            size: 30,
+          ),
+          onPressed: () {
+            Navigator.push(context,
+              MaterialPageRoute(builder: (context) => const AddVocabularyPage()));
+          }
+        ),
+      ),
+    );
+  }
+}
