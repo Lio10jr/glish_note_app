@@ -1,8 +1,8 @@
 import 'dart:async';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:glish_note_app/main_screen.dart';
 import 'package:glish_note_app/shared/consts/colors.dart';
-import 'package:glish_note_app/shared/widgets/bottom_bar.dart';
 import 'package:glish_note_app/shared/widgets/title.dart';
 
 class VerifyEmailPage extends StatefulWidget {
@@ -70,8 +70,7 @@ class VerifyEmailPageState extends State<VerifyEmailPage> {
 
   @override
   Widget build(BuildContext context) => isEmailVerificado
-      //? const PrincipalSession()
-      ? const BottomBarScreen()
+      ? const MainScreen()
       : Scaffold(
         appBar: const PreferredSize(
           preferredSize: Size.fromHeight(300.0),

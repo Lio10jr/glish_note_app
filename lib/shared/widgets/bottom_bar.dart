@@ -59,11 +59,11 @@ class BottomBarScreenState extends State<BottomBarScreen> {
             label: '',
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.image),
-            label: '',
+            icon: Icon(Icons.person),
+            label: 'dd',
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.person),
+            icon: Icon(Icons.settings),
             label: '',
           ),
         ],

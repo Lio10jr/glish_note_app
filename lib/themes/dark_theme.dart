@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:glish_note_app/shared/consts/colors.dart';
 
 ThemeData darkMode = ThemeData(
   brightness: Brightness.dark,
@@ -13,10 +12,5 @@ ThemeData darkMode = ThemeData(
     background: Colors.black87,
     primary: Colors.black54,
     secondary: Colors.black45,
-  ),
-  bottomNavigationBarTheme: BottomNavigationBarThemeData(
-    backgroundColor: const Color(0xFF211F60),
-    selectedItemColor: Colors.white,
-    unselectedItemColor: ColorsConsts.endColor
   ),
 );

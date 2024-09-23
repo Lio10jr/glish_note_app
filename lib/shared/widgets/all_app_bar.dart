@@ -90,13 +90,18 @@ class AllAppBarLogState extends State<AllAppBarLog> {
         ),
         SizedBox(
           height: 80,
-          child: Text(
-            "Explora la riqueza de contenido que hemos preparado para ti!",
-            textAlign: TextAlign.center,
-            style: GoogleFonts.ubuntu(
-                fontSize: 20,
-                fontWeight: FontWeight.w500,
-                color: ColorsConsts.subTitle),
+          child: Container(
+            padding: const EdgeInsets.only(left: 50, right: 50),
+            child: Text(
+              "Explora la riqueza de contenido que hemos preparado para ti!",
+              textAlign: TextAlign.center,
+              style: GoogleFonts.ubuntu(
+                  fontSize: 20,
+                  fontWeight: FontWeight.w500,
+                  color: ColorsConsts.subTitle,
+                  ),
+                  
+            ),
           ),
         ),
       ],
