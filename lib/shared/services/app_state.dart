@@ -106,41 +106,6 @@ class AppState with ChangeNotifier {
     }
   }
 
-  // Future<bool> saveImagenes(String email, String img, String imgurl,
-  //     String fecha, String hora, String nota) async {
-  //   try {
-  //     bool respuesta = await UserServices()
-  //         .saveImagenes(email, img, imgurl, fecha, hora, nota);
-  //     if (respuesta) {
-  //       notifyListeners();
-  //     }
-  //     return respuesta;
-  //   } catch (e) {
-  //     return false;
-  //   }
-  // }
-
-  // Future<List<ImageCamera>> obtenerImagenes(String email) async {
-  //   try {
-  //     imgsCamera = await UserServices().getImagenes(email);
-  //     return imgsCamera;
-  //   } catch (e) {
-  //     return imgsCamera;
-  //   }
-  // }
-
-  // Future<bool> eliminarImagenes(String email, String fecha) async {
-  //   try {
-  //     bool respuesta = await UserServices().eliminarImagenes(email, fecha);
-  //     if (respuesta) {
-  //       notifyListeners();
-  //     }
-  //     return respuesta;
-  //   } catch (e) {
-  //     return false;
-  //   }
-  // }
-
   Future<bool> saveCalificacionContenido(
       String text, String text2, double valor, String text3) async {
     try {

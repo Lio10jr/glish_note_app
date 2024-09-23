@@ -59,17 +59,18 @@ class AllAppBarLogState extends State<AllAppBarLog> {
 
   @override
   Widget build(BuildContext context) {
+    double appBarHeight = MediaQuery.of(context).size.height * 0.2;
     return Column(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
         SizedBox(
-          height: 200,
+          height: appBarHeight,
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceAround,
             mainAxisSize: MainAxisSize.max,
             children: [
               Container(
-                  width: 200,
+                  width: MediaQuery.of(context).size.width * 0.5,
                   padding: const EdgeInsets.only(top: 50, bottom: 50),
                   child: TextTitle(
                       color: ColorsConsts.primarybackground,
@@ -89,19 +90,17 @@ class AllAppBarLogState extends State<AllAppBarLog> {
           ),
         ),
         SizedBox(
-          height: 80,
-          child: Container(
-            padding: const EdgeInsets.only(left: 50, right: 50),
-            child: Text(
-              "Explora la riqueza de contenido que hemos preparado para ti!",
-              textAlign: TextAlign.center,
-              style: GoogleFonts.ubuntu(
-                  fontSize: 20,
-                  fontWeight: FontWeight.w500,
-                  color: ColorsConsts.subTitle,
-                  ),
-                  
-            ),
+           width: MediaQuery.of(context).size.width * 0.9,
+          height: MediaQuery.of(context).size.height * 0.1,
+          child: Text(
+            "Explora la riqueza de contenido que hemos preparado para ti!",
+            textAlign: TextAlign.center,
+            style: GoogleFonts.ubuntu(
+                fontSize: 20,
+                fontWeight: FontWeight.w500,
+                color: ColorsConsts.subTitle,
+                ),
+                
           ),
         ),
       ],

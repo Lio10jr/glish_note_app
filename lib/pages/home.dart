@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:glish_note_app/pages/grammar.dart';
 import 'package:glish_note_app/pages/notes/list_note_page.dart';
@@ -41,32 +43,35 @@ class HomeState extends State<Home> {
         child: Column(
           children: [
             const AllAppBarLog(),
-            SizedBox(
-              height: 400,
-              child: PageView(
-                controller: PageController(
-                  viewportFraction: 0.8,
+            const SizedBox(height: 16.0),
+            Expanded(
+              child: Container(
+                padding: EdgeInsets.only(bottom: Platform.isAndroid ? 130 : 0,),
+                child: PageView(
+                  controller: PageController(
+                    viewportFraction: 0.8,
+                  ),
+                  onPageChanged: (newPage) {
+                    setState(() {
+                      _currentPage = newPage;
+                    });
+                  },
+                  children: [
+                    animatedPaddingPage(context, "Contenidos", const Grammar(), 0,
+                        const Color(0xFFFFD640), "contenido.png"),
+                    animatedPaddingPage(
+                        context,
+                        "Vocabulario",
+                        const Vocabulary(),
+                        1,
+                        const Color(0xFFFF5252),
+                        "vocabulario.png"),
+                    animatedPaddingPage(context, "Verbos", const VerbsPage(), 2,
+                        const Color(0xF94489FF), "verbos.png"),
+                    animatedPaddingPage(context, "Notas", const ListNotePage(), 3,
+                        const Color(0xFF69F0AF), "notas.png"),
+                  ],
                 ),
-                onPageChanged: (newPage) {
-                  setState(() {
-                    _currentPage = newPage;
-                  });
-                },
-                children: [
-                  animatedPaddingPage(context, "Contenidos", const Grammar(), 0,
-                      const Color(0xFFFFD640), "contenido.png"),
-                  animatedPaddingPage(
-                      context,
-                      "Vocabulario",
-                      const Vocabulary(),
-                      1,
-                      const Color(0xFFFF5252),
-                      "vocabulario.png"),
-                  animatedPaddingPage(context, "Verbos", const VerbsPage(), 2,
-                      const Color(0xF94489FF), "verbos.png"),
-                  animatedPaddingPage(context, "Notas", const ListNotePage(), 3,
-                      const Color(0xFF69F0AF), "notas.png"),
-                ],
               ),
             )
           ],
@@ -93,7 +98,7 @@ class HomeState extends State<Home> {
             decoration: const BoxDecoration(
               boxShadow: [
                 BoxShadow(
-                  color:  Color(0x54FFFFFF),
+                  color: Color(0x54FFFFFF),
                   offset: Offset(1, 1),
                   blurRadius: 2,
                 )
@@ -127,9 +132,7 @@ class HomeState extends State<Home> {
                             ),
                           ),
                         ],
-                      )
-                    )
-                  ),
+                      ))),
             ),
           )),
     );

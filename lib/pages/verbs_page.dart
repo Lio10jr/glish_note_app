@@ -1,8 +1,7 @@
-import 'dart:convert';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart' as rootBundle;
 import 'package:glish_note_app/shared/consts/colors.dart';
 import 'package:glish_note_app/shared/models/verbs_data_model.dart';
+import 'package:glish_note_app/shared/services/verbs_services.dart';
 import 'package:glish_note_app/shared/widgets/text_title.dart';
 import 'package:glish_note_app/shared/widgets/title_icon.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -20,14 +19,14 @@ class VerbsPageState extends State<VerbsPage> {
   late List<VerbsDateModel> listV;
   late List<VerbsDateModel> listSearch = [];
   bool loading = true;
-  final TextEditingController? _textEditingController = TextEditingController();
+  final TextEditingController? textEditingController = TextEditingController();
   Future<List<VerbsDateModel>>? future;
 
   Future<List<VerbsDateModel>> readJsonData() async {
-    final jsondata =
-        await rootBundle.rootBundle.loadString('assets/verbsList.json');
-    final list = json.decode(jsondata) as List<dynamic>;
-    return list.map((e) => VerbsDateModel.fromJson(e)).toList();
+    final verbService = VerbsServices();
+
+    var verbList = await verbService.getVerbs();
+    return verbList;
   }
 
   @override
@@ -53,7 +52,7 @@ class VerbsPageState extends State<VerbsPage> {
         appBar: const PreferredSize(
           preferredSize: Size.fromHeight(300.0),
           child: TitleIcon(
-            titulo: "Aquí puedes ver una lista de Verbos que te ayudarán!",
+            titulo: "Conjugación de Verbos. Genial!",
           ),
         ),
         body: Stack(children: [
@@ -63,26 +62,26 @@ class VerbsPageState extends State<VerbsPage> {
                 borderRadius: BorderRadius.circular(20),
                 color: ColorsConsts.primarybackground),
             child: TextField(
-              controller: _textEditingController,
+              controller: textEditingController,
               onChanged: (val) {
                 setState(() {
                   listSearch = listV.where((element) {
-                    final simpleForm = element.simpleForm!
+                    final simpleForm = element.simple_form
                         .toLowerCase()
                         .contains(val.toLowerCase());
-                    final simplePast = element.simplePast!
+                    final simplePast = element.simple_past
                         .toLowerCase()
                         .contains(val.toLowerCase());
-                    final thirdPerson = element.thirdPerson!
+                    final thirdPerson = element.third_person
                         .toLowerCase()
                         .contains(val.toLowerCase());
-                    final pastParticiple = element.pastParticiple!
+                    final pastParticiple = element.past_participle
                         .toLowerCase()
                         .contains(val.toLowerCase());
-                    final gerund = element.gerund!
+                    final gerund = element.gerund
                         .toLowerCase()
                         .contains(val.toLowerCase());
-                    final meaning = element.meaning!
+                    final meaning = element.meaning
                         .toLowerCase()
                         .contains(val.toLowerCase());
                     return simpleForm ||
@@ -99,7 +98,7 @@ class VerbsPageState extends State<VerbsPage> {
                     icon: const Icon(Icons.clear),
                     onPressed: () {
                       setState(() {
-                        _textEditingController!.clear();
+                        textEditingController!.clear();
                       });
                     },
                   ),
@@ -112,6 +111,7 @@ class VerbsPageState extends State<VerbsPage> {
             ),
           ),
           Container(
+              height: MediaQuery.of(context).size.height * 0.5,
               margin: const EdgeInsets.only(top: 80),
               padding: const EdgeInsets.only(right: 10, left: 10),
               decoration: const BoxDecoration(
@@ -129,7 +129,7 @@ class VerbsPageState extends State<VerbsPage> {
                           var items = data.data as List<VerbsDateModel>;
                           listV = items;
                           return ListView.builder(
-                              itemCount: _textEditingController!.text.isNotEmpty
+                              itemCount: textEditingController!.text.isNotEmpty
                                   ? listSearch.length
                                   : listV.length,
                               itemBuilder: (context, index) {
@@ -147,14 +147,15 @@ class VerbsPageState extends State<VerbsPage> {
                                                   .primarybackground,
                                               size: 12.0,
                                               fontw: FontWeight.w800,
-                                              titulo: _textEditingController
-                                                      .text.isNotEmpty
-                                                  ? listSearch[index]
-                                                      .simpleForm
-                                                      .toString()
-                                                  : listV[index]
-                                                      .simpleForm
-                                                      .toString()),
+                                              titulo:
+                                                  textEditingController!
+                                                          .text.isNotEmpty
+                                                      ? listSearch[index]
+                                                          .simple_form
+                                                          .toString()
+                                                      : listV[index]
+                                                          .simple_form
+                                                          .toString()),
                                         ),
                                         Padding(
                                           padding: const EdgeInsets.all(8.0),
@@ -162,7 +163,7 @@ class VerbsPageState extends State<VerbsPage> {
                                               color: ColorsConsts.endColor,
                                               size: 12.0,
                                               fontw: FontWeight.w800,
-                                              titulo: _textEditingController
+                                              titulo: textEditingController!
                                                       .text.isNotEmpty
                                                   ? listSearch[index]
                                                       .meaning
@@ -197,13 +198,13 @@ class VerbsPageState extends State<VerbsPage> {
                                                         .symmetric(
                                                         vertical: 5.0),
                                                     child: Text(
-                                                        _textEditingController
+                                                        textEditingController!
                                                                 .text.isNotEmpty
                                                             ? listSearch[index]
-                                                                .simplePast
+                                                                .simple_past
                                                                 .toString()
                                                             : listV[index]
-                                                                .simplePast
+                                                                .simple_past
                                                                 .toString(),
                                                         style:
                                                             GoogleFonts.ubuntu(
@@ -235,13 +236,13 @@ class VerbsPageState extends State<VerbsPage> {
                                                         .symmetric(
                                                         vertical: 5.0),
                                                     child: Text(
-                                                        _textEditingController
+                                                        textEditingController!
                                                                 .text.isNotEmpty
                                                             ? listSearch[index]
-                                                                .thirdPerson
+                                                                .third_person
                                                                 .toString()
                                                             : listV[index]
-                                                                .thirdPerson
+                                                                .third_person
                                                                 .toString(),
                                                         style:
                                                             GoogleFonts.ubuntu(
@@ -253,6 +254,14 @@ class VerbsPageState extends State<VerbsPage> {
                                                 ],
                                               ),
                                             ),
+                                          ],
+                                        ),
+                                        Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.center,
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.center,
+                                          children: [
                                             Expanded(
                                               child: Column(
                                                 children: [
@@ -273,13 +282,13 @@ class VerbsPageState extends State<VerbsPage> {
                                                         .symmetric(
                                                         vertical: 5.0),
                                                     child: Text(
-                                                      _textEditingController
+                                                      textEditingController!
                                                               .text.isNotEmpty
                                                           ? listSearch[index]
-                                                              .pastParticiple
+                                                              .past_participle
                                                               .toString()
                                                           : listV[index]
-                                                              .pastParticiple
+                                                              .past_participle
                                                               .toString(),
                                                       style: GoogleFonts.ubuntu(
                                                           fontSize: 12,
@@ -310,7 +319,7 @@ class VerbsPageState extends State<VerbsPage> {
                                                         .symmetric(
                                                         vertical: 5.0),
                                                     child: Text(
-                                                      _textEditingController
+                                                      textEditingController!
                                                               .text.isNotEmpty
                                                           ? listSearch[index]
                                                               .gerund

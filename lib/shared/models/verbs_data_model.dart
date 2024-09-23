@@ -1,21 +1,25 @@
+// ignore_for_file: non_constant_identifier_names
+
 class VerbsDateModel {
-  String? type;
-  String? simpleForm;
-  String? thirdPerson;
-  String? simplePast;
-  String? pastParticiple;
-  String? gerund;
-  String? meaning;
 
-  
-  VerbsDateModel.fromJson(Map<String, dynamic> parsedJson) {
+  VerbsDateModel({
+    required this.key,
+    required this.type,
+    required this.simple_form,
+    required this.third_person,
+    required this.simple_past,
+    required this.past_participle,
+    required this.gerund,
+    required this.meaning,
+  });
 
-    type = parsedJson['TYPE'];
-    simpleForm = parsedJson['SIMPLE FORM'];
-    thirdPerson = parsedJson['THIRD PERSON'];
-    simplePast = parsedJson['SIMPLE PAST'];
-    pastParticiple = parsedJson['PAST PARTICIPLE'];
-    gerund = parsedJson['GERUND'];
-    meaning = parsedJson['MEANING'];
-  }
+  String key;
+  String type;
+  String simple_form;
+  String third_person;
+  String simple_past;
+  String past_participle;
+  String gerund;
+  String meaning;
+
 }

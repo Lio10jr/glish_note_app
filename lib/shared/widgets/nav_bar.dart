@@ -1,5 +1,3 @@
-import 'dart:io';
-
 import 'package:flutter/material.dart';
 
 class NavBar extends StatelessWidget {
@@ -12,10 +10,9 @@ class NavBar extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       color: Colors.transparent,
-      margin: EdgeInsets.only(
+      margin: const EdgeInsets.only(
         left: 16,
         right: 16,
-        bottom: Platform.isAndroid ? 16 : 0,
       ),
       child: BottomAppBar(
         color: Colors.transparent,
