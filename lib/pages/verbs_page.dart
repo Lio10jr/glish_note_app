@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:glish_note_app/shared/consts/colors.dart';
 import 'package:glish_note_app/shared/models/verbs_data_model.dart';
+import 'package:glish_note_app/shared/services/sqlite/verbs_data.dart';
 import 'package:glish_note_app/shared/services/verbs_services.dart';
 import 'package:glish_note_app/shared/widgets/text_title.dart';
 import 'package:glish_note_app/shared/widgets/title_icon.dart';
@@ -24,8 +25,13 @@ class VerbsPageState extends State<VerbsPage> {
 
   Future<List<VerbsDateModel>> readJsonData() async {
     final verbService = VerbsServices();
+    final verbDataService = VerbsDataService();
 
-    var verbList = await verbService.getVerbs();
+    var verbList = verbDataService.getVerbs();
+
+    if ( verbList.isEmpty ) {
+      verbList = await verbService.getVerbs();
+    }
     return verbList;
   }
 
@@ -50,14 +56,26 @@ class VerbsPageState extends State<VerbsPage> {
       },
       child: Scaffold(
         appBar: const PreferredSize(
-          preferredSize: Size.fromHeight(300.0),
+          preferredSize: Size.fromHeight(200.0),
           child: TitleIcon(
             titulo: "Conjugación de Verbos. Genial!",
           ),
         ),
         body: Stack(children: [
           Container(
-            margin: const EdgeInsets.only(top: 10, left: 10, right: 10),
+              width: MediaQuery.of(context).size.width * 1.0,
+              margin: const EdgeInsets.only(top: 0, left: 10, right: 10),
+              decoration: const BoxDecoration(
+                border: Border(
+                  top: BorderSide(
+                    color: Colors.purple,
+                    width: 1.5,
+                  ),
+                ),
+              ),
+            ),
+          Container(
+            margin: const EdgeInsets.only(top: 20, left: 10, right: 10),
             decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(20),
                 color: ColorsConsts.primarybackground),
@@ -111,9 +129,8 @@ class VerbsPageState extends State<VerbsPage> {
             ),
           ),
           Container(
-              height: MediaQuery.of(context).size.height * 0.5,
-              margin: const EdgeInsets.only(top: 80),
-              padding: const EdgeInsets.only(right: 10, left: 10),
+              margin: const EdgeInsets.only(top: 100),
+              padding: const EdgeInsets.only(right: 10, left: 10, bottom: 85),
               decoration: const BoxDecoration(
                 borderRadius: BorderRadius.all(
                   Radius.circular(30),
@@ -134,6 +151,7 @@ class VerbsPageState extends State<VerbsPage> {
                                   : listV.length,
                               itemBuilder: (context, index) {
                                 return Card(
+                                  color: Theme.of(context).cardTheme.color,
                                   elevation: 5,
                                   child: Padding(
                                     padding: const EdgeInsets.all(8.0),
@@ -141,7 +159,7 @@ class VerbsPageState extends State<VerbsPage> {
                                       children: [
                                         Padding(
                                           padding: const EdgeInsets.symmetric(
-                                              vertical: 5.0),
+                                              vertical: 1.0),
                                           child: TextTitle(
                                               color: ColorsConsts
                                                   .primarybackground,
@@ -184,7 +202,7 @@ class VerbsPageState extends State<VerbsPage> {
                                                   Padding(
                                                     padding: const EdgeInsets
                                                         .symmetric(
-                                                        vertical: 5.0),
+                                                        vertical: 1.0),
                                                     child: Text(
                                                       "Simple Past",
                                                       style: GoogleFonts.ubuntu(
@@ -196,7 +214,7 @@ class VerbsPageState extends State<VerbsPage> {
                                                   Padding(
                                                     padding: const EdgeInsets
                                                         .symmetric(
-                                                        vertical: 5.0),
+                                                        vertical: 1.0),
                                                     child: Text(
                                                         textEditingController!
                                                                 .text.isNotEmpty
@@ -222,7 +240,7 @@ class VerbsPageState extends State<VerbsPage> {
                                                   Padding(
                                                     padding: const EdgeInsets
                                                         .symmetric(
-                                                        vertical: 5.0),
+                                                        vertical: 1.0),
                                                     child: Text(
                                                       "Third Person",
                                                       style: GoogleFonts.ubuntu(
@@ -234,7 +252,7 @@ class VerbsPageState extends State<VerbsPage> {
                                                   Padding(
                                                     padding: const EdgeInsets
                                                         .symmetric(
-                                                        vertical: 5.0),
+                                                        vertical: 1.0),
                                                     child: Text(
                                                         textEditingController!
                                                                 .text.isNotEmpty
@@ -268,7 +286,7 @@ class VerbsPageState extends State<VerbsPage> {
                                                   Padding(
                                                     padding: const EdgeInsets
                                                         .symmetric(
-                                                        vertical: 5.0),
+                                                        vertical: 1.0),
                                                     child: Text(
                                                       "Past Participle",
                                                       style: GoogleFonts.ubuntu(
@@ -280,7 +298,7 @@ class VerbsPageState extends State<VerbsPage> {
                                                   Padding(
                                                     padding: const EdgeInsets
                                                         .symmetric(
-                                                        vertical: 5.0),
+                                                        vertical: 1.0),
                                                     child: Text(
                                                       textEditingController!
                                                               .text.isNotEmpty
@@ -305,7 +323,7 @@ class VerbsPageState extends State<VerbsPage> {
                                                   Padding(
                                                     padding: const EdgeInsets
                                                         .symmetric(
-                                                        vertical: 5.0),
+                                                        vertical: 1.0),
                                                     child: Text(
                                                       "Gerund",
                                                       style: GoogleFonts.ubuntu(
@@ -317,7 +335,7 @@ class VerbsPageState extends State<VerbsPage> {
                                                   Padding(
                                                     padding: const EdgeInsets
                                                         .symmetric(
-                                                        vertical: 5.0),
+                                                        vertical: 1.0),
                                                     child: Text(
                                                       textEditingController!
                                                               .text.isNotEmpty

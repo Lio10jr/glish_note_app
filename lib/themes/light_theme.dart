@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:glish_note_app/shared/consts/colors.dart';
 
-ThemeData lightMode = ThemeData(
+ThemeData lightmode = ThemeData(
     brightness: Brightness.light,
     appBarTheme: const AppBarTheme(
       backgroundColor: Colors.transparent,
@@ -9,8 +10,12 @@ ThemeData lightMode = ThemeData(
       titleTextStyle: TextStyle(color: Colors.black, fontSize: 20),
     ),
     colorScheme: const ColorScheme.light(
-      background: Colors.white,
       primary: Colors.white70,
       secondary: Colors.white60,
     ),
+    cardTheme: const CardTheme(
+    color: Colors.white,
+  ),
+  primaryColor: ColorsConsts.black,  
+  scaffoldBackgroundColor: Colors.white,
 );

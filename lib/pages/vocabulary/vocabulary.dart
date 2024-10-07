@@ -60,7 +60,7 @@ class Statevocabulary extends State<Vocabulary> {
       },
       child: Scaffold(
         appBar: const PreferredSize(
-          preferredSize: Size.fromHeight(300.0),
+          preferredSize: Size.fromHeight(200.0),
           child: TitleIcon(
             titulo: "Todo tu vocabulario esta aqui!",
           ),
@@ -68,7 +68,16 @@ class Statevocabulary extends State<Vocabulary> {
         body: Stack(
           children: [
             Container(
+              width: MediaQuery.of(context).size.width * 1.0,
               margin: const EdgeInsets.only(top: 0, left: 10, right: 10),
+              decoration: const BoxDecoration(
+                border: Border(
+                  top: BorderSide(
+                    color: Colors.purple,
+                    width: 1.5,
+                  ),
+                ),
+              ),
               child: TextButton(
                   onPressed: () {
                     Navigator.push(
@@ -77,9 +86,9 @@ class Statevocabulary extends State<Vocabulary> {
                             builder: (context) => const AddVocabularyPage()));
                   },
                   child: Text(
-                    'Agrega nueva nota aquí!',
+                    'Agrega una nueva palabra aquí!',
                     style: GoogleFonts.ubuntu(
-                        color: ColorsConsts.primarybackground,
+                        color: ColorsConsts.endColor,
                         fontSize: 15,
                         fontWeight: FontWeight.w500),
                   )),
@@ -122,9 +131,8 @@ class Statevocabulary extends State<Vocabulary> {
               ),
             ),
             Container(
-              height: MediaQuery.of(context).size.height * 0.5,
               margin: const EdgeInsets.only(top: 110),
-              padding: const EdgeInsets.only(right: 10, left: 10),
+              padding: const EdgeInsets.only(right: 20, left: 20, bottom: 85),
               decoration: const BoxDecoration(
                 borderRadius: BorderRadius.all(
                   Radius.circular(30),
@@ -145,6 +153,7 @@ class Statevocabulary extends State<Vocabulary> {
                                   : misnotas.length,
                               itemBuilder: (context, index) {
                                 return Card(
+                                  color: Theme.of(context).cardTheme.color,
                                   elevation: 5,
                                   child: Padding(
                                     padding: const EdgeInsets.all(8.0),
@@ -285,11 +294,13 @@ class Statevocabulary extends State<Vocabulary> {
                                                           .symmetric(
                                                           vertical: 1.0),
                                                       child: Row(
-                                                        mainAxisAlignment: MainAxisAlignment.center,
+                                                        mainAxisAlignment:
+                                                            MainAxisAlignment
+                                                                .center,
                                                         children: [
                                                           SizedBox(
                                                             width: 20,
-                                                            child: IconButton(                                                              
+                                                            child: IconButton(
                                                               padding:
                                                                   EdgeInsets
                                                                       .zero,

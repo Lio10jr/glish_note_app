@@ -14,7 +14,7 @@ class TitleIcon extends StatelessWidget {
       mainAxisSize: MainAxisSize.max,
       children: [
         Container(
-            width: 200,
+            width: MediaQuery.of(context).size.width * 0.5,
             padding: const EdgeInsets.only(top: 50, bottom: 50),
             child: TextTitle(
                 color: ColorsConsts.primarybackground,

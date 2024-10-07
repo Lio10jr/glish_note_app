@@ -4,40 +4,37 @@ import 'package:glish_note_app/themes/light_theme.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class ThemeProvider with ChangeNotifier {
-  ThemeData _themeData = lightMode;
-  bool _isDarkMode = false;
+  bool _isSelected = false;
+  bool get isSelected => false;
 
+  ThemeData _themeData = lightmode;
   ThemeData get themeData => _themeData;
-  bool get isDarkMode => _isDarkMode;
 
-  ThemeProvider(bool isDarkMode) {
-    _isDarkMode = isDarkMode;
-    if (isDarkMode) {
-      _themeData = darkMode;
-    } else {
-      _themeData = lightMode;
-    }
+  ThemeProvider() {
+    _loadTheme(); // Cargar el tema al inicializar el provider
   }
-  
-  set themeData(ThemeData themeData) {
-    _themeData = themeData;
+
+  void toggleTheme() {
+    if (_themeData == lightmode) {
+      _themeData = darkmode;
+    } else {
+      _themeData = lightmode;
+    }
+    _isSelected = !_isSelected;
+
+    SharedPreferences.getInstance().then((prefs) {
+      prefs.setBool('_isSelected', _isSelected);
+    });
+
     notifyListeners();
   }
 
-  void toggleTheme(bool modo) {
-    _isDarkMode = modo;
+  Future<void> _loadTheme() async {
+    final prefs = await SharedPreferences.getInstance();
+    _isSelected = prefs.getBool('_isSelected') ?? false;
 
-    if (modo == true) {
-      themeData = darkMode;
-    } else {
-      themeData = lightMode;
-    }
+    _themeData = _isSelected ? darkmode : lightmode;
 
-    _saveThemeMode(modo);
-  }
-
-  Future<void> _saveThemeMode(bool isDark) async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    prefs.setBool('isDarkMode', isDark);
+    notifyListeners();
   }
 }

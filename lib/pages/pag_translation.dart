@@ -115,6 +115,7 @@ class StatepagTranslation extends State<PageTranslation> {
           width: Size.infinite.width,
           height: Size.infinite.height,
           margin: const EdgeInsets.symmetric(horizontal: 20),
+          padding: const EdgeInsets.only(bottom: 85),
           decoration: const BoxDecoration(
             border: Border(
               top: BorderSide(

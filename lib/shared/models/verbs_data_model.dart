@@ -1,7 +1,6 @@
 // ignore_for_file: non_constant_identifier_names
 
 class VerbsDateModel {
-
   VerbsDateModel({
     required this.key,
     required this.type,
@@ -22,4 +21,14 @@ class VerbsDateModel {
   String gerund;
   String meaning;
 
+  Map<String, Object?> toJson() => {
+        key: key,
+        type: type,
+        simple_form: simple_form,
+        third_person: third_person,
+        simple_past: simple_past,
+        past_participle: past_participle,
+        gerund: gerund,
+        meaning: meaning,
+      };
 }

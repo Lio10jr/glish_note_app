@@ -1,8 +1,10 @@
+import 'dart:async';
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/services.dart' as rootBundle;
+import 'package:glish_note_app/data/sqlite3/sqlite.dart';
 import 'package:glish_note_app/pages/auth/login.dart';
 import 'package:glish_note_app/pages/auth/verify_email_page.dart';
 import 'package:glish_note_app/shared/models/content_page.dart';
@@ -10,21 +12,26 @@ import 'package:glish_note_app/shared/models/content_page_title.dart';
 import 'package:glish_note_app/shared/models/content_topic.dart';
 import 'package:glish_note_app/themes/theme_provider.dart';
 import 'package:provider/provider.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import 'firebase_options.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  
+  // Inicializar firebase
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
 
-  SharedPreferences prefs = await SharedPreferences.getInstance();
-  bool isDarkMode = prefs.getBool('isDarkMode') ?? false;
+  // Inicializar Sqlite3
+  SqliteDatabase().initDatabase();
 
-  runApp(ChangeNotifierProvider(
-      create: (context) => ThemeProvider(isDarkMode), child: const MyApp()));
+  runApp(
+    ChangeNotifierProvider(
+      create: (context) => ThemeProvider(),
+      child: const MyApp(),
+    ),
+  );
 }
 
 class MyApp extends StatefulWidget {
@@ -40,21 +47,22 @@ class StateMyApp extends State<MyApp> {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-        theme: Provider.of<ThemeProvider>(context).themeData,
-        debugShowCheckedModeBanner: false,
-        home: Scaffold(
-          body: StreamBuilder<User?>(
-            stream: FirebaseAuth.instance.authStateChanges(),
-            builder: (context, snapshot) {
-              if (snapshot.hasData) {
-                return const VerifyEmailPage();
-              } else {
-                return const LoginPage();
-              }
-            },
-          ),
-        )
-      );
+      debugShowCheckedModeBanner: false,
+      home: Scaffold(
+        body: StreamBuilder<User?>(
+          stream: FirebaseAuth.instance.authStateChanges(),
+          builder: (context, snapshot) {
+            if (snapshot.hasData) {
+              return const VerifyEmailPage();
+            } else {
+              return const LoginPage();
+            }
+          },
+        ),
+      ),
+      themeMode: ThemeMode.system,
+      theme: Provider.of<ThemeProvider>(context).themeData,
+    );
   }
 }
 

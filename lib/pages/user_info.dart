@@ -5,7 +5,6 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:list_tile_switch/list_tile_switch.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -26,7 +25,9 @@ class UserInfoState extends State<UserInfo> {
   String? uid;
   String? name;
   String? email;
-  bool _light = false;
+
+  bool isSelected = false;
+
   @override
   void initState() {
     super.initState();
@@ -35,20 +36,6 @@ class UserInfoState extends State<UserInfo> {
       setState(() {});
     });
     getData();
-    _loadTheme();
-  }
-
-  _loadTheme() async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    setState(() {
-      _light = prefs.getBool('isDarkMode') ?? false;
-      Provider.of<ThemeProvider>(context, listen: false).toggleTheme(_light);
-    });
-  }
-
-  _saveTheme(bool value) async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    prefs.setBool('isDarkMode', value);
   }
 
   void getData() async {
@@ -70,7 +57,7 @@ class UserInfoState extends State<UserInfo> {
             name = sn.child('UserName').value.toString();
             prefs.setString('uid', sn.key.toString());
             prefs.setString('Email', sn.child('Email').value.toString());
-            prefs.setString('UserName', sn.child('UserName').value.toString());            
+            prefs.setString('UserName', sn.child('UserName').value.toString());
           }
         }
       });
@@ -114,7 +101,7 @@ class UserInfoState extends State<UserInfo> {
                                   width: 12,
                                 ),
                                 Text(
-                                  name ?? 'hoooo',
+                                  name ?? '',
                                   style: GoogleFonts.ubuntu(
                                       fontSize: 15,
                                       fontWeight: FontWeight.w300,
@@ -138,36 +125,42 @@ class UserInfoState extends State<UserInfo> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  titles('Informacion de Usuario'),
+                  titles('Información de usuario'),
                   userListTile(
-                      'Nombre de Usuario', name ?? '', Icons.person, context),
-                  userListTile('E-mail', email ?? '', Icons.email, context),
-                  titles('Configuración de Usuario'),
-                  const Divider(
-                    thickness: 1,
-                  ),
-                  ListTileSwitch(
-                    value: _light,
-                    leading: Icon(Icons.nightlight_sharp,
-                        color: ColorsConsts.endColor),
-                    onChanged: (bool value) {
-                      setState(() {
-                        _light = value;
-                      });
-                      Provider.of<ThemeProvider>(context, listen: false)
-                          .toggleTheme(value);
-                      _saveTheme(value);
-                    },
-                    visualDensity: VisualDensity.comfortable,
-                    switchType: SwitchType.material,
-                    switchActiveColor: Colors.indigo,
-                    title: Text(
-                      'Modo Nocturno',
-                      style: GoogleFonts.ubuntu(
-                        fontSize: 15,
-                        fontWeight: FontWeight.w300,
+                      'Nombre de usuario', '@$name', Icons.person, context),
+                  userListTile('Correo electrónico', email ?? '', Icons.email, context),
+                  titles('Configuración de usuario'),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.end,
+                    children: [
+                      Padding(
+                        padding: const EdgeInsets.only(right: 15),
+                        child: Consumer<ThemeProvider>(
+                          builder: (context, themeProider, child) {
+                            return Switch(
+                              activeColor: Colors.white,
+                              // trackOutlineColor:
+                              //     const MaterialStatePropertyAll(Colors.black),
+                              inactiveThumbColor: Colors.white,
+                              thumbColor: MaterialStatePropertyAll(ColorsConsts.endColor),
+                              inactiveTrackColor: Colors.transparent,
+                              thumbIcon: MaterialStatePropertyAll(
+                                themeProider.isSelected
+                                    ? const Icon(Icons.nights_stay)
+                                    : const Icon(
+                                        Icons.wb_sunny,
+                                        color: Colors.white,
+                                      ),
+                              ),
+                              value: themeProider.isSelected,
+                              onChanged: (value) {
+                                themeProider.toggleTheme();
+                              },
+                            );
+                          },
+                        ),
                       ),
-                    ),
+                    ],
                   ),
                   Material(
                     color: Colors.transparent,
@@ -191,9 +184,13 @@ class UserInfoState extends State<UserInfo> {
                                       TextButton(
                                         onPressed: () =>
                                             Navigator.pop(context, 'Cancel'),
-                                        child: const Text(
+                                        child: Text(
                                           'Cancelar',
-                                          style: TextStyle(color: Colors.black),
+                                          style: GoogleFonts.ubuntu(
+                                            fontSize: 15,
+                                            fontWeight: FontWeight.w300,
+                                            color: ThemeData().primaryColor
+                                          ),
                                         ),
                                       ),
                                       TextButton(

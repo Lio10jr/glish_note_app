@@ -37,17 +37,33 @@ class StateLoginPage extends State<LoginPage> {
             color: Colors.white,
           ),
           child: SafeArea(
-            child: Center(
+            top: false,
+            child: Center(              
               child: SingleChildScrollView(
                 child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.center,                  
                   children: [
                     Container(
-                      alignment: Alignment.center,
+                      width: MediaQuery.of(context).size.width * 0.8,
+                      padding: EdgeInsets.zero,
+                      child: ClipRect(
+                      child: Align(
+                        alignment: Alignment.center,
+                        heightFactor: 0.7,
+                        child: Image.asset(
+                          'assets/logos/logo_large_background_none.webp',
+                          fit: BoxFit.fill,
+                        ),
+                      ),
+                    ),
+                    ),
+                    Container(
+                      alignment: Alignment.topLeft,
                       padding: const EdgeInsets.symmetric(
-                          vertical: 80, horizontal: 10),
+                          vertical: 20, horizontal: 30),
                       child: const TextTitle(
-                          size: 30,
-                          titulo: "INICIAR SESIÓN",
+                          size: 20,
+                          titulo: "Iniciar Sesión",
                           fontw: FontWeight.w800,
                           color: Colors.black),
                     ),
@@ -229,7 +245,7 @@ class StateLoginPage extends State<LoginPage> {
           ),
           backgroundColor: ColorsConsts.msgErrbackground,
         ));
-      }else if (e.code == 'wrong-password') {
+      } else if (e.code == 'wrong-password') {
         ScaffoldMessenger.of(context).showSnackBar(SnackBar(
           content: const Text(
             "La contraseña es invalida",

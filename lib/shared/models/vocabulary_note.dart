@@ -12,4 +12,13 @@ class VocabularyNote {
   String ingles;
   String espanish;
   String pronunciacion;
+
+
+  Map<String, Object?> toJson() => {
+        key: key,
+        user: user,
+        ingles: ingles,
+        espanish: espanish,
+        pronunciacion: pronunciacion
+      };
 }

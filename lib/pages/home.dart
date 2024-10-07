@@ -10,6 +10,8 @@ import 'package:google_fonts/google_fonts.dart';
 
 const IconData facebook = IconData(0xe255, fontFamily: 'MaterialIcons');
 
+
+
 //PagSecundaria con sesion iniciada
 class Home extends StatefulWidget {
   const Home({super.key});
@@ -26,6 +28,7 @@ class HomeState extends State<Home> {
     const Color(0xFF211F60),
     const Color(0xFF501E6B),
   ];
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -59,13 +62,8 @@ class HomeState extends State<Home> {
                   children: [
                     animatedPaddingPage(context, "Contenidos", const Grammar(), 0,
                         const Color(0xFFFFD640), "contenido.png"),
-                    animatedPaddingPage(
-                        context,
-                        "Vocabulario",
-                        const Vocabulary(),
-                        1,
-                        const Color(0xFFFF5252),
-                        "vocabulario.png"),
+                    animatedPaddingPage(context, "Vocabulario", const Vocabulary(), 1,
+                        const Color(0xFFFF5252), "vocabulario.png"),
                     animatedPaddingPage(context, "Verbos", const VerbsPage(), 2,
                         const Color(0xF94489FF), "verbos.png"),
                     animatedPaddingPage(context, "Notas", const ListNotePage(), 3,
@@ -108,6 +106,9 @@ class HomeState extends State<Home> {
               padding: const EdgeInsets.all(7.0),
               child: SizedBox(
                   child: TextButton(
+                    style: ButtonStyle(
+                      overlayColor: WidgetStateProperty.all(Colors.transparent)
+                    ),
                       onPressed: () {
                         Navigator.push(context,
                             MaterialPageRoute(builder: (context) => pag));

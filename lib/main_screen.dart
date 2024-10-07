@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:glish_note_app/pages/home.dart';
+import 'package:glish_note_app/pages/learning/principal_learn.dart';
 import 'package:glish_note_app/pages/pag_translation.dart';
 import 'package:glish_note_app/pages/user_info.dart';
 import 'package:glish_note_app/shared/models/nav_model.dart';
@@ -33,7 +34,8 @@ class _MainScreenState extends State<MainScreen> {
         navKey: translationNavKey,
       ),
       NavModel(
-        page: const UserInfo(),
+        page: const PrincipalLearn
+        (),
         navKey: profileNavKey,
       ),
       NavModel(
@@ -55,6 +57,7 @@ class _MainScreenState extends State<MainScreen> {
         }
       },
       child: Scaffold(
+        resizeToAvoidBottomInset: false,
         extendBody: false,
         body: IndexedStack(
           index: selectedTab,
@@ -69,7 +72,7 @@ class _MainScreenState extends State<MainScreen> {
                   ))
               .toList(),
         ),
-        floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
+        floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,        
         floatingActionButton: NavBar(
           pageIndex: selectedTab,
           onTap: (index) {

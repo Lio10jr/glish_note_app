@@ -37,8 +37,7 @@ class GrammarState extends State<Grammar> {
     });
   }
 
-  ContentRating? buscarPorTema(
-      List<ContentRating> lista, String tema) {
+  ContentRating? buscarPorTema(List<ContentRating> lista, String tema) {
     try {
       contenidoo = list.firstWhere((calificacion) => calificacion.tema == tema);
       return contenidoo;
@@ -51,13 +50,13 @@ class GrammarState extends State<Grammar> {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: const PreferredSize(
-          preferredSize: Size.fromHeight(300.0),
+          preferredSize: Size.fromHeight(200.0),
           child: TitleIcon(
-            titulo: "Temas relevantes sobre el aprendizaje",
+            titulo: "Gramática: Temas básicos",
           ),
         ),
         body: Container(
-          padding: const EdgeInsets.only(bottom: 20),
+          padding: const EdgeInsets.only(bottom: 85),
           margin: const EdgeInsets.symmetric(horizontal: 20),
           decoration: const BoxDecoration(
             border: Border(
@@ -139,8 +138,7 @@ class GrammarState extends State<Grammar> {
     return Card(
       elevation: 5.0,
       shape: RoundedRectangleBorder(
-        borderRadius:
-            BorderRadius.circular(20.0),
+        borderRadius: BorderRadius.circular(20.0),
       ),
       child: InkWell(
         splashColor: ColorsConsts.backgroundColor,

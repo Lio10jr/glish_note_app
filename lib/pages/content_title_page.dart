@@ -110,7 +110,8 @@ class ContentTitlePageState extends State<ContentTitlePage> {
           ),
         ),
         body: Container(
-          padding: const EdgeInsets.only(bottom: 20),
+          height: MediaQuery.of(context).size.height * 1,
+          padding: const EdgeInsets.only(bottom: 80),
           margin: const EdgeInsets.symmetric(horizontal: 20),
           decoration: const BoxDecoration(
             border: Border(

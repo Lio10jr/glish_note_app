@@ -36,12 +36,12 @@ class NavBar extends StatelessWidget {
                 ),
                 const SizedBox(width: 80),
                 navItem(
-                  Icons.person_outline,
+                  Icons.school_outlined,
                   pageIndex == 2,
                   onTap: () => onTap(2),
                 ),
                 navItem(
-                  Icons.settings_outlined,
+                  Icons.person_outline,
                   pageIndex == 3,
                   onTap: () => onTap(3),
                 ),

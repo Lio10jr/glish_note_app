@@ -62,10 +62,14 @@ class EditNotePageState extends State<EditNotePage> {
                     margin: const EdgeInsets.only(top: 25),
                     child: TextFormField(
                       controller: textTemaControlador,
-                      decoration: const InputDecoration(
+                      decoration: InputDecoration(
                         labelText: "Titulo",
+                          labelStyle: TextStyle(
+                            color: Theme.of(context).primaryColor,
+                          ),
                         hintText: "Escribe aqui!",
                       ),
+                      cursorColor: ColorsConsts.endColor,
                       maxLines: 1,
                       validator: (String? date) {
                         if (date!.isEmpty) {
@@ -90,10 +94,14 @@ class EditNotePageState extends State<EditNotePage> {
                     margin: const EdgeInsets.only(bottom: 30.0),
                     child: TextFormField(
                       controller: textControlador,
-                      decoration: const InputDecoration(
+                      decoration: InputDecoration(
                           labelText: "Nota",
+                          labelStyle: TextStyle(
+                            color: Theme.of(context).primaryColor,
+                          ),
                           hintText: "Escribe aqui tus notas",
                           border: InputBorder.none),
+                      cursorColor: ColorsConsts.endColor,
                       maxLines: null,
                       validator: (String? date) {
                         if (date!.isEmpty) {
