@@ -43,11 +43,7 @@ class PrincipalLearnState extends State<PrincipalLearn> {
           child: ListView(
             children: [
               cardIcon(
-                context, 'Notificaciones para mejorar el aprendizaje!', 
-                const LearnWords(), Icons.abc_outlined
-              ),
-              cardIcon(
-                context, 'Test de palabras aprendidas!', 
+                context, 'Test de verbos!', 
                 const LearnWords(), Icons.tips_and_updates_outlined
               ),
             ],

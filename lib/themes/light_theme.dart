@@ -17,5 +17,5 @@ ThemeData lightmode = ThemeData(
     color: Colors.white,
   ),
   primaryColor: ColorsConsts.black,  
-  scaffoldBackgroundColor: Colors.white,
+  scaffoldBackgroundColor: Colors.white,  
 );

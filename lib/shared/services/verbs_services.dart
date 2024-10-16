@@ -52,15 +52,14 @@ class VerbsServices {
 
       for (DataSnapshot verb in sna.children) {
         VerbsDateModel verbObj = VerbsDateModel(
-          key: verb.key.toString(),
-          type: verb.child('type').value.toString(),
-          simple_form: verb.child('simple_form').value.toString(),
-          third_person: verb.child('third_person').value.toString(),
-          simple_past: verb.child('simple_past').value.toString(),
-          past_participle: verb.child('past_participle').value.toString(),
-          gerund: verb.child('gerund').value.toString(),
-          meaning: verb.child('meaning').value.toString()
-        );
+            key: verb.key.toString(),
+            type: verb.child('type').value.toString(),
+            simple_form: verb.child('simple_form').value.toString(),
+            third_person: verb.child('third_person').value.toString(),
+            simple_past: verb.child('simple_past').value.toString(),
+            past_participle: verb.child('past_participle').value.toString(),
+            gerund: verb.child('gerund').value.toString(),
+            meaning: verb.child('meaning').value.toString());
 
         listt.add(verbObj);
       }
