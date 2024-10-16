@@ -18,10 +18,27 @@ class ListNotePage extends StatefulWidget {
 
 class ListNotePageState extends State<ListNotePage> {
   List<NoteTopic> listApuntes = [];
+  Future<List<NoteTopic>>? listFuture;
   TextEditingController textControlador = TextEditingController();
   TextEditingController textsubTemaControlador = TextEditingController();
   final user = FirebaseAuth.instance.currentUser!;
   List misApuntes = [];
+
+  Future<List<NoteTopic>> dataNoteTopic() async {
+    return await AppState().obtenerApuntes(user.email!);
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    getData();
+  }
+
+  getData() {
+    setState(() {
+      listFuture = dataNoteTopic();
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -61,18 +78,37 @@ class ListNotePageState extends State<ListNotePage> {
               )),
         ),
         Container(
+          alignment: Alignment.center,
           margin: const EdgeInsets.only(top: 40),
           padding: const EdgeInsets.only(bottom: 85, left: 20, right: 20),
-          child: FutureBuilder<List<NoteTopic>>(
-            future: AppState()
-                .obtenerApuntes(
-                  user.email!,
-                )
-                .then((value) => value),
-            builder: (BuildContext context,
-                AsyncSnapshot<List<NoteTopic>> snapshot) {
+          child: RefreshIndicator(
+            color: ColorsConsts.white,
+            backgroundColor: ColorsConsts.primarybackground,
+            onRefresh: () async {
+              return Future<void>.delayed(getData());
+            },
+            child: FutureBuilder<List<NoteTopic>>(
+            future: listFuture,
+              builder: (BuildContext context,
+              AsyncSnapshot<List<NoteTopic>> snapshot) {
               if (snapshot.connectionState == ConnectionState.waiting) {
-                return const CircularProgressIndicator();
+                return Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    CircularProgressIndicator(
+                      backgroundColor: ColorsConsts.primarybackground,
+                      color: ColorsConsts.endColor,
+                    ),
+                    Text(
+                      'Cargando...',
+                      style: GoogleFonts.ubuntu(
+                        fontSize: 13, 
+                        fontWeight: FontWeight.w300
+                      ) 
+                    )
+                  ],
+                );
               } else if (snapshot.hasError) {
                 return Text("Error: ${snapshot.error}");
               } else {
@@ -137,6 +173,7 @@ class ListNotePageState extends State<ListNotePage> {
                     ]);
               }
             },
+            ),
           ),
         ),
       ]),

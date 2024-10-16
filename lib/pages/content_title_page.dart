@@ -10,7 +10,6 @@ import 'package:glish_note_app/shared/services/app_state.dart';
 import 'package:glish_note_app/shared/widgets/text_title.dart';
 import 'package:glish_note_app/shared/widgets/title_icon.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:rating_dialog/rating_dialog.dart';
 
 class ContentTitlePage extends StatefulWidget {
   final String tema;
@@ -47,57 +46,6 @@ class ContentTitlePageState extends State<ContentTitlePage> {
     setState(() {
       objContenidoPageTitulo = contenido;
     });
-  }
-
-  void _showRatingDialog() {
-    final _dialog = RatingDialog(
-      initialRating: 1.0,
-      title: Text(
-        widget.tema,
-        textAlign: TextAlign.center,
-        style: const TextStyle(
-          fontSize: 20,
-          fontWeight: FontWeight.bold,
-        ),
-      ),
-      message: const Text(
-        'Que te parecio el contenido explicado, calificanos y comentanos.',
-        textAlign: TextAlign.center,
-        style: TextStyle(fontSize: 15),
-      ),
-      submitButtonText: 'Enviar',
-      submitButtonTextStyle: TextStyle(
-        color: ColorsConsts.primarybackground,
-      ),
-      commentHint: 'Cuentanos...',
-      onCancelled: () {
-        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-          content: const Text("Proceso Cancelado"),
-          backgroundColor: ColorsConsts.msgErrbackground,
-        ));
-      },
-      onSubmitted: (response) async {
-        bool result = await AppState().saveCalificacionContenido(
-            user.email!, widget.tema, response.rating, response.comment);
-        if (result) {
-          ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-            content: const Text("Gracias por comentarnos"),
-            backgroundColor: ColorsConsts.msgValidbackground,
-          ));
-        } else {
-          ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-            content: const Text("Algo salio mal"),
-            backgroundColor: ColorsConsts.msgErrbackground,
-          ));
-        }
-      },
-    );
-
-    showDialog(
-      context: context,
-      barrierDismissible: true,
-      builder: (context) => _dialog,
-    );
   }
 
   @override
@@ -265,17 +213,8 @@ class ContentTitlePageState extends State<ContentTitlePage> {
                             size: 15,
                             titulo: "Contenido no encontrado");
                       }
-                    }),
-                TextButton(
-                  style: TextButton.styleFrom(
-                    textStyle: const TextStyle(fontSize: 15),
+                    }
                   ),
-                  onPressed: _showRatingDialog,
-                  child: Text(
-                    'Calificar contenido',
-                    style: TextStyle(color: ColorsConsts.primarybackground),
-                  ),
-                ),
               ],
             ),
           ),

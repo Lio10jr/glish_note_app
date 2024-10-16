@@ -139,240 +139,263 @@ class Statevocabulary extends State<Vocabulary> {
                 ),
               ),
               child: loading == false
-                  ? FutureBuilder(
-                      future: future,
-                      builder: (context, data) {
-                        if (data.hasError) {
-                          return Center(child: Text("${data.error}"));
-                        } else if (data.hasData) {
-                          var items = data.data as List<VocabularyNote>;
-                          misnotas = items;
-                          return ListView.builder(
-                              itemCount: _textBuscar.text.isNotEmpty
-                                  ? listBuscar.length
-                                  : misnotas.length,
-                              itemBuilder: (context, index) {
-                                return Card(
-                                  color: Theme.of(context).cardTheme.color,
-                                  elevation: 5,
-                                  child: Padding(
-                                    padding: const EdgeInsets.all(8.0),
-                                    child: Column(
-                                      children: [
-                                        Row(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.center,
-                                          crossAxisAlignment:
-                                              CrossAxisAlignment.center,
-                                          children: [
-                                            Expanded(
-                                              child: Column(
-                                                children: [
-                                                  Padding(
-                                                    padding: const EdgeInsets
-                                                        .symmetric(
-                                                        vertical: 1.0),
-                                                    child: Text(
-                                                      "Ingles",
-                                                      style: GoogleFonts.ubuntu(
-                                                          fontSize: 12,
-                                                          fontWeight:
-                                                              FontWeight.w800),
-                                                    ),
+                ? RefreshIndicator(
+                  color: ColorsConsts.white,
+                  backgroundColor: ColorsConsts.primarybackground,
+                  onRefresh: () async {
+                    getData();
+                    return Future<void>.delayed(const Duration(seconds: 2));
+                  },
+                  child: FutureBuilder(
+                    future: future,
+                    builder: (context, data) {
+                      if (data.hasError) {
+                        return Center(child: Text("${data.error}"));
+                      } else if (data.hasData) {
+                        var items = data.data as List<VocabularyNote>;
+                        misnotas = items;
+                        return ListView.builder(
+                            itemCount: _textBuscar.text.isNotEmpty
+                                ? listBuscar.length
+                                : misnotas.length,
+                            itemBuilder: (context, index) {
+                              return Card(
+                                color: Theme.of(context).cardTheme.color,
+                                elevation: 5,
+                                child: Padding(
+                                  padding: const EdgeInsets.all(8.0),
+                                  child: Column(
+                                    children: [
+                                      Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.center,
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.center,
+                                        children: [
+                                          Expanded(
+                                            child: Column(
+                                              children: [
+                                                Padding(
+                                                  padding: const EdgeInsets
+                                                      .symmetric(
+                                                      vertical: 1.0),
+                                                  child: Text(
+                                                    "Ingles",
+                                                    style: GoogleFonts.ubuntu(
+                                                        fontSize: 12,
+                                                        fontWeight:
+                                                            FontWeight.w800),
                                                   ),
-                                                  Padding(
-                                                    padding: const EdgeInsets
-                                                        .symmetric(
-                                                        vertical: 1.0),
-                                                    child: Text(
-                                                        _textBuscar
-                                                                .text.isNotEmpty
-                                                            ? listBuscar[index]
-                                                                .ingles
-                                                                .toString()
-                                                            : misnotas[index]
-                                                                .ingles
-                                                                .toString(),
-                                                        style:
-                                                            GoogleFonts.ubuntu(
-                                                                fontSize: 12,
-                                                                fontWeight:
-                                                                    FontWeight
-                                                                        .w300)),
-                                                  ),
-                                                ],
-                                              ),
-                                            ),
-                                            Expanded(
-                                              child: Column(
-                                                children: [
-                                                  Padding(
-                                                    padding: const EdgeInsets
-                                                        .symmetric(
-                                                        vertical: 1.0),
-                                                    child: Text(
-                                                      "Español",
-                                                      style: GoogleFonts.ubuntu(
-                                                          fontSize: 12,
-                                                          fontWeight:
-                                                              FontWeight.w800),
-                                                    ),
-                                                  ),
-                                                  Padding(
-                                                    padding: const EdgeInsets
-                                                        .symmetric(
-                                                        vertical: 1.0),
-                                                    child: Text(
-                                                        _textBuscar
-                                                                .text.isNotEmpty
-                                                            ? listBuscar[index]
-                                                                .espanish
-                                                                .toString()
-                                                            : misnotas[index]
-                                                                .espanish
-                                                                .toString(),
-                                                        style:
-                                                            GoogleFonts.ubuntu(
-                                                                fontSize: 12,
-                                                                fontWeight:
-                                                                    FontWeight
-                                                                        .w300)),
-                                                  ),
-                                                ],
-                                              ),
-                                            ),
-                                          ],
-                                        ),
-                                        Row(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.center,
-                                          crossAxisAlignment:
-                                              CrossAxisAlignment.center,
-                                          children: [
-                                            Expanded(
-                                              child: Column(
-                                                children: [
-                                                  Padding(
-                                                    padding: const EdgeInsets
-                                                        .symmetric(
-                                                        vertical: 1.0),
-                                                    child: Text(
-                                                      "Pronunciación",
-                                                      style: GoogleFonts.ubuntu(
-                                                          fontSize: 12,
-                                                          fontWeight:
-                                                              FontWeight.w800),
-                                                    ),
-                                                  ),
-                                                  Padding(
-                                                    padding: const EdgeInsets
-                                                        .symmetric(
-                                                        vertical: 1.0),
-                                                    child: Text(
+                                                ),
+                                                Padding(
+                                                  padding: const EdgeInsets
+                                                      .symmetric(
+                                                      vertical: 1.0),
+                                                  child: Text(
                                                       _textBuscar
                                                               .text.isNotEmpty
                                                           ? listBuscar[index]
-                                                              .pronunciacion
+                                                              .ingles
                                                               .toString()
                                                           : misnotas[index]
-                                                              .pronunciacion
+                                                              .ingles
                                                               .toString(),
-                                                      style: GoogleFonts.ubuntu(
-                                                          fontSize: 12,
-                                                          fontWeight:
-                                                              FontWeight.w300),
-                                                    ),
+                                                      style:
+                                                          GoogleFonts.ubuntu(
+                                                              fontSize: 12,
+                                                              fontWeight:
+                                                                  FontWeight
+                                                                      .w300)),
+                                                ),
+                                              ],
+                                            ),
+                                          ),
+                                          Expanded(
+                                            child: Column(
+                                              children: [
+                                                Padding(
+                                                  padding: const EdgeInsets
+                                                      .symmetric(
+                                                      vertical: 1.0),
+                                                  child: Text(
+                                                    "Español",
+                                                    style: GoogleFonts.ubuntu(
+                                                        fontSize: 12,
+                                                        fontWeight:
+                                                            FontWeight.w800),
                                                   ),
-                                                ],
-                                              ),
+                                                ),
+                                                Padding(
+                                                  padding: const EdgeInsets
+                                                      .symmetric(
+                                                      vertical: 1.0),
+                                                  child: Text(
+                                                      _textBuscar
+                                                              .text.isNotEmpty
+                                                          ? listBuscar[index]
+                                                              .espanish
+                                                              .toString()
+                                                          : misnotas[index]
+                                                              .espanish
+                                                              .toString(),
+                                                      style:
+                                                          GoogleFonts.ubuntu(
+                                                              fontSize: 12,
+                                                              fontWeight:
+                                                                  FontWeight
+                                                                      .w300)),
+                                                ),
+                                              ],
                                             ),
-                                            Expanded(
-                                              child: Column(
-                                                children: [
-                                                  Padding(
-                                                      padding: const EdgeInsets
-                                                          .symmetric(
-                                                          vertical: 1.0),
-                                                      child: Row(
-                                                        mainAxisAlignment:
-                                                            MainAxisAlignment
-                                                                .center,
-                                                        children: [
-                                                          SizedBox(
-                                                            width: 20,
-                                                            child: IconButton(
-                                                              padding:
-                                                                  EdgeInsets
-                                                                      .zero,
-                                                              icon: Icon(
-                                                                Icons.edit,
-                                                                color: ColorsConsts
-                                                                    .primarybackground,
-                                                                size: 20,
-                                                              ),
-                                                              onPressed:
-                                                                  () async {
-                                                                Navigator.push(
-                                                                    context,
-                                                                    MaterialPageRoute(
-                                                                        builder:
-                                                                            (context) =>
-                                                                                EditVocabularyPage(objVocabulario: _textBuscar.text.isNotEmpty ? listBuscar[index] : misnotas[index])));
-                                                              },
-                                                            ),
-                                                          ),
-                                                          const SizedBox(
-                                                            width: 15,
-                                                          ),
-                                                          SizedBox(
-                                                            width: 20,
-                                                            child: IconButton(
-                                                              padding:
-                                                                  EdgeInsets
-                                                                      .zero,
-                                                              icon: Icon(
-                                                                Icons.delete,
-                                                                color: Colors
-                                                                    .red
-                                                                    .shade300,
-                                                                size: 20,
-                                                              ),
-                                                              onPressed:
-                                                                  () async {
-                                                                await AppState().deleteVocabulario(_textBuscar
-                                                                        .text
-                                                                        .isNotEmpty
-                                                                    ? listBuscar[
-                                                                            index]
-                                                                        .key
-                                                                        .toString()
-                                                                    : misnotas[
-                                                                            index]
-                                                                        .key
-                                                                        .toString());
-                                                              },
-                                                            ),
-                                                          ),
-                                                        ],
-                                                      )),
-                                                ],
-                                              ),
+                                          ),
+                                        ],
+                                      ),
+                                      Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.center,
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.center,
+                                        children: [
+                                          Expanded(
+                                            child: Column(
+                                              children: [
+                                                Padding(
+                                                  padding: const EdgeInsets
+                                                      .symmetric(
+                                                      vertical: 1.0),
+                                                  child: Text(
+                                                    "Pronunciación",
+                                                    style: GoogleFonts.ubuntu(
+                                                        fontSize: 12,
+                                                        fontWeight:
+                                                            FontWeight.w800),
+                                                  ),
+                                                ),
+                                                Padding(
+                                                  padding: const EdgeInsets
+                                                      .symmetric(
+                                                      vertical: 1.0),
+                                                  child: Text(
+                                                    _textBuscar
+                                                            .text.isNotEmpty
+                                                        ? listBuscar[index]
+                                                            .pronunciacion
+                                                            .toString()
+                                                        : misnotas[index]
+                                                            .pronunciacion
+                                                            .toString(),
+                                                    style: GoogleFonts.ubuntu(
+                                                        fontSize: 12,
+                                                        fontWeight:
+                                                            FontWeight.w300),
+                                                  ),
+                                                ),
+                                              ],
                                             ),
-                                          ],
-                                        ),
-                                      ],
-                                    ),
+                                          ),
+                                          Expanded(
+                                            child: Column(
+                                              children: [
+                                                Padding(
+                                                    padding: const EdgeInsets
+                                                        .symmetric(
+                                                        vertical: 1.0),
+                                                    child: Row(
+                                                      mainAxisAlignment:
+                                                          MainAxisAlignment
+                                                              .center,
+                                                      children: [
+                                                        SizedBox(
+                                                          width: 20,
+                                                          child: IconButton(
+                                                            padding:
+                                                                EdgeInsets
+                                                                    .zero,
+                                                            icon: Icon(
+                                                              Icons.edit,
+                                                              color: ColorsConsts
+                                                                  .primarybackground,
+                                                              size: 20,
+                                                            ),
+                                                            onPressed:
+                                                                () async {
+                                                              Navigator.push(
+                                                                  context,
+                                                                  MaterialPageRoute(
+                                                                      builder:
+                                                                          (context) =>
+                                                                              EditVocabularyPage(objVocabulario: _textBuscar.text.isNotEmpty ? listBuscar[index] : misnotas[index])));
+                                                            },
+                                                          ),
+                                                        ),
+                                                        const SizedBox(
+                                                          width: 15,
+                                                        ),
+                                                        SizedBox(
+                                                          width: 20,
+                                                          child: IconButton(
+                                                            padding:
+                                                                EdgeInsets
+                                                                    .zero,
+                                                            icon: Icon(
+                                                              Icons.delete,
+                                                              color: Colors
+                                                                  .red
+                                                                  .shade300,
+                                                              size: 20,
+                                                            ),
+                                                            onPressed:
+                                                                () async {
+                                                              await AppState().deleteVocabulario(_textBuscar
+                                                                      .text
+                                                                      .isNotEmpty
+                                                                  ? listBuscar[
+                                                                          index]
+                                                                      .key
+                                                                      .toString()
+                                                                  : misnotas[
+                                                                          index]
+                                                                      .key
+                                                                      .toString());
+                                                            },
+                                                          ),
+                                                        ),
+                                                      ],
+                                                    )),
+                                              ],
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    ],
                                   ),
-                                );
-                              });
-                        } else {
-                          return const Center(
-                            child: CircularProgressIndicator(),
-                          );
-                        }
-                      },
+                                ),
+                              );
+                            });
+                      } else {
+                        return const Center(
+                          child: CircularProgressIndicator(),
+                        );
+                      }
+                    },
+                  )
+                  )
+                : Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    CircularProgressIndicator(
+                      backgroundColor: ColorsConsts.primarybackground,
+                      color: ColorsConsts.endColor,
+                    ),
+                    Text(
+                      'Cargando...',
+                      style: GoogleFonts.ubuntu(
+                        fontSize: 13, 
+                        fontWeight: FontWeight.w300
+                      ) 
                     )
-                  : const CircularProgressIndicator(),
+                  ],
+                ),
             ),
           ],
         ),

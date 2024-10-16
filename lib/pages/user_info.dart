@@ -142,9 +142,9 @@ class UserInfoState extends State<UserInfo> {
                               // trackOutlineColor:
                               //     const MaterialStatePropertyAll(Colors.black),
                               inactiveThumbColor: Colors.white,
-                              thumbColor: MaterialStatePropertyAll(ColorsConsts.endColor),
+                              thumbColor: WidgetStatePropertyAll(ColorsConsts.endColor),
                               inactiveTrackColor: Colors.transparent,
-                              thumbIcon: MaterialStatePropertyAll(
+                              thumbIcon: WidgetStatePropertyAll(
                                 themeProider.isSelected
                                     ? const Icon(Icons.nights_stay)
                                     : const Icon(

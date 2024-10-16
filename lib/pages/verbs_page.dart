@@ -137,7 +137,14 @@ class VerbsPageState extends State<VerbsPage> {
                 ),
               ),
               child: loading == false
-                  ? FutureBuilder(
+                  ? RefreshIndicator(
+                    color: ColorsConsts.white,
+                    backgroundColor: ColorsConsts.primarybackground,
+                    onRefresh: () async {
+                      getData();
+                      return Future<void>.delayed(const Duration(seconds: 2));
+                    },
+                    child: FutureBuilder(
                       future: future,
                       builder: (context, data) {
                         if (data.hasError) {
@@ -368,7 +375,24 @@ class VerbsPageState extends State<VerbsPage> {
                         }
                       },
                     )
-                  : const CircularProgressIndicator()),
+                  )
+                  : Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      CircularProgressIndicator(
+                        backgroundColor: ColorsConsts.primarybackground,
+                        color: ColorsConsts.endColor,
+                      ),
+                      Text(
+                        'Cargando...',
+                        style: GoogleFonts.ubuntu(
+                          fontSize: 13, 
+                          fontWeight: FontWeight.w300
+                        ) 
+                      )
+                    ],
+                  )
+                ),
         ]),
       ),
     );

@@ -42,7 +42,6 @@ dependencies:
   shared_preferences: ^2.3.2
   google_fonts: ^6.2.1
   email_validator: ^3.0.0
-  rating_dialog: ^2.0.4
   flutter_tts: ^4.0.2
   translator: ^1.0.0
   sqlite3: ^2.4.6

@@ -4,47 +4,22 @@ import 'package:glish_note_app/pages/content_title_page.dart';
 import 'package:glish_note_app/shared/consts/colors.dart';
 import 'package:glish_note_app/shared/models/content_page.dart';
 import 'package:glish_note_app/shared/models/content_rating.dart';
-import 'package:glish_note_app/shared/services/app_state.dart';
 import 'package:glish_note_app/shared/widgets/text_title.dart';
 import 'package:glish_note_app/shared/widgets/title_icon.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 import '../main.dart';
 
 class Grammar extends StatefulWidget {
   const Grammar({super.key});
-
-  GrammarState createState() => GrammarState();
+  @override
+  State<Grammar> createState() => GrammarState();
 }
 
 class GrammarState extends State<Grammar> {
   List<ContentRating> list = [];
   final user = FirebaseAuth.instance.currentUser!;
   ContentRating? contenidoo;
-
-  @override
-  initState() {
-    super.initState();
-    setState(() {
-      getData();
-    });
-  }
-
-  getData() async {
-    final contenido = await AppState().obtenerValoracionContenido(user.email!);
-
-    setState(() {
-      list = contenido;
-    });
-  }
-
-  ContentRating? buscarPorTema(List<ContentRating> lista, String tema) {
-    try {
-      contenidoo = list.firstWhere((calificacion) => calificacion.tema == tema);
-      return contenidoo;
-    } catch (e) {
-      return null;
-    }
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -126,8 +101,21 @@ class GrammarState extends State<Grammar> {
                         );
                       });
                 } else {
-                  return const Center(
-                    child: CircularProgressIndicator(),
+                  return Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      CircularProgressIndicator(
+                        backgroundColor: ColorsConsts.primarybackground,
+                        color: ColorsConsts.endColor,
+                      ),
+                      Text(
+                        'Cargando...',
+                        style: GoogleFonts.ubuntu(
+                          fontSize: 13, 
+                          fontWeight: FontWeight.w300
+                        ) 
+                      )
+                    ],
                   );
                 }
               }),
@@ -168,16 +156,11 @@ class GrammarState extends State<Grammar> {
                           tema,
                           textAlign: TextAlign.end,
                         ),
-                        Row(
-                          children: [
-                            if (buscarPorTema(list, tema) != null)
-                              const Icon(Icons.star,
-                                  color: Colors.greenAccent, size: 25),
-                            if (buscarPorTema(list, tema) != null)
-                              Text(contenidoo!.valoracion.toString())
-                            else
-                              const Icon(Icons.star_border,
-                                  color: Colors.yellow, size: 25),
+                        const Row(
+                          children: [                            
+                            Icon(Icons.book,
+                              color: Colors.yellow, size: 25
+                            ),
                           ],
                         ),
                       ],

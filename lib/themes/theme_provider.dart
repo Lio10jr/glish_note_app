@@ -5,7 +5,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 class ThemeProvider with ChangeNotifier {
   bool _isSelected = false;
-  bool get isSelected => false;
+  bool get isSelected => _isSelected;
 
   ThemeData _themeData = lightmode;
   ThemeData get themeData => _themeData;
