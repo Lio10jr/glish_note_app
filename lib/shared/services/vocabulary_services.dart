@@ -3,11 +3,13 @@ import 'package:glish_note_app/shared/models/vocabulary_note.dart';
 
 // ignore: camel_case_types
 class VocabularyServices {
+
   Future<List<VocabularyNote>> getVocabulario(String email) async {
     List<VocabularyNote> list = [];
     try {
-      DatabaseReference ref = FirebaseDatabase.instance.ref();
-      final snapshot = await ref.child('VocabularyNote').get();
+      final ref = FirebaseDatabase.instance.ref('VocabularyNote');
+      ref.keepSynced(false);
+      final snapshot = await ref.get();
       if (snapshot.exists) {
         for (DataSnapshot sn in snapshot.children) {
           if (email == sn.child('email').value.toString()) {

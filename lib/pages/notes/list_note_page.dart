@@ -85,6 +85,7 @@ class ListNotePageState extends State<ListNotePage> {
             color: ColorsConsts.white,
             backgroundColor: ColorsConsts.primarybackground,
             onRefresh: () async {
+              setState(() { });
               return Future<void>.delayed(getData());
             },
             child: FutureBuilder<List<NoteTopic>>(

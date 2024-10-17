@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:glish_note_app/shared/consts/colors.dart';
 import 'package:glish_note_app/shared/models/verbs_data_model.dart';
-import 'package:glish_note_app/shared/services/sqlite/verbs_data.dart';
 import 'package:glish_note_app/shared/services/verbs_services.dart';
 import 'package:glish_note_app/shared/widgets/text_title.dart';
 import 'package:glish_note_app/shared/widgets/title_icon.dart';
@@ -19,34 +18,7 @@ String busVerb = "";
 class VerbsPageState extends State<VerbsPage> {
   late List<VerbsDateModel> listV;
   late List<VerbsDateModel> listSearch = [];
-  bool loading = true;
   final TextEditingController? textEditingController = TextEditingController();
-  Future<List<VerbsDateModel>>? future;
-
-  Future<List<VerbsDateModel>> readJsonData() async {
-    final verbService = VerbsServices();
-    final verbDataService = VerbsDataService();
-
-    var verbList = verbDataService.getVerbs();
-
-    if ( verbList.isEmpty ) {
-      verbList = await verbService.getVerbs();
-    }
-    return verbList;
-  }
-
-  @override
-  void initState() {
-    super.initState();
-    getData();
-  }
-
-  getData() {
-    setState(() {
-      future = readJsonData();
-      loading = false;
-    });
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -129,6 +101,7 @@ class VerbsPageState extends State<VerbsPage> {
             ),
           ),
           Container(
+            alignment: Alignment.center,
               margin: const EdgeInsets.only(top: 100),
               padding: const EdgeInsets.only(right: 10, left: 10, bottom: 85),
               decoration: const BoxDecoration(
@@ -136,22 +109,23 @@ class VerbsPageState extends State<VerbsPage> {
                   Radius.circular(30),
                 ),
               ),
-              child: loading == false
-                  ? RefreshIndicator(
+              child: RefreshIndicator(
                     color: ColorsConsts.white,
                     backgroundColor: ColorsConsts.primarybackground,
                     onRefresh: () async {
-                      getData();
+                      setState(() {});
                       return Future<void>.delayed(const Duration(seconds: 2));
                     },
                     child: FutureBuilder(
-                      future: future,
-                      builder: (context, data) {
-                        if (data.hasError) {
-                          return Center(child: Text("${data.error}"));
-                        } else if (data.hasData) {
-                          var items = data.data as List<VerbsDateModel>;
-                          listV = items;
+                      future: VerbsServices().getVerbs(),
+                      builder: (context, snapshot) {
+                        if (snapshot.hasData) {
+                          final items = snapshot.data;
+                          listV = items!;
+                          if (listV.isEmpty) {
+                            return const Center(child: Text('Verbos no encontrados'));
+                          }
+
                           return ListView.builder(
                               itemCount: textEditingController!.text.isNotEmpty
                                   ? listSearch.length
@@ -368,29 +342,30 @@ class VerbsPageState extends State<VerbsPage> {
                                   ),
                                 );
                               });
-                        } else {
-                          return const Center(
-                            child: CircularProgressIndicator(),
+                        } else if (snapshot.hasError) {
+                          return const Center(child: Text('Error de obtención de verbos'));
+                        } else if ( snapshot.connectionState == ConnectionState.waiting) {
+                          return Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              CircularProgressIndicator(
+                                backgroundColor: ColorsConsts.primarybackground,
+                                color: ColorsConsts.endColor,
+                              ),
+                              Text(
+                                'Cargando...',
+                                style: GoogleFonts.ubuntu(
+                                  fontSize: 13, 
+                                  fontWeight: FontWeight.w300
+                                ) 
+                              )
+                            ],
                           );
+                        } else {
+                          return const Center(child: Text('Error interno de obtención')); 
                         }
                       },
                     )
-                  )
-                  : Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      CircularProgressIndicator(
-                        backgroundColor: ColorsConsts.primarybackground,
-                        color: ColorsConsts.endColor,
-                      ),
-                      Text(
-                        'Cargando...',
-                        style: GoogleFonts.ubuntu(
-                          fontSize: 13, 
-                          fontWeight: FontWeight.w300
-                        ) 
-                      )
-                    ],
                   )
                 ),
         ]),

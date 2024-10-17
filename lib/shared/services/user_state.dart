@@ -42,8 +42,10 @@ class UserState with ChangeNotifier {
     String name = "Users";
     bool result = false;
     try {
-      DatabaseReference ref = FirebaseDatabase.instance.ref();
-      final snapshot = await ref.child(name).get();
+      final ref = FirebaseDatabase.instance.ref(name);
+      ref.keepSynced(false);
+
+      final snapshot = await ref.get();
 
       if (snapshot.exists) {
         for (DataSnapshot sn in snapshot.children) {

@@ -1,15 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:glish_note_app/shared/models/content_rating.dart';
 import 'package:glish_note_app/shared/models/image_camera.dart';
 import 'package:glish_note_app/shared/models/note_topic.dart';
 import 'package:glish_note_app/shared/models/vocabulary_note.dart';
-import 'package:glish_note_app/shared/services/rating_services.dart';
-import 'package:glish_note_app/shared/services/user_services.dart';
+import 'package:glish_note_app/shared/services/apuntes_service.dart';
 import 'package:glish_note_app/shared/services/vocabulary_services.dart';
 
 class AppState with ChangeNotifier {
   List<VocabularyNote> _vocabularioList = [];
-  List<ContentRating> _calificacionList = [];
   List<NoteTopic> _apuntes = [];
   List<ImageCamera> imgsCamera = [];
 
@@ -63,7 +60,7 @@ class AppState with ChangeNotifier {
 
   Future<bool> editNota(String key, String tema, String contenido) async {
     try {
-      bool respuesta = await UserServices().editarNotas(key, tema, contenido);
+      bool respuesta = await ApuntesService().editarNotas(key, tema, contenido);
       if (respuesta) {
         notifyListeners();
       }
@@ -75,7 +72,7 @@ class AppState with ChangeNotifier {
 
   Future<bool> saveApuntes(String s, String text, String text2) async {
     try {
-      bool respuesta = await UserServices().saveApuntesTopic(s, text, text2);
+      bool respuesta = await ApuntesService().saveApuntesTopic(s, text, text2);
       if (respuesta) {
         notifyListeners();
       }
@@ -87,7 +84,7 @@ class AppState with ChangeNotifier {
 
   Future<bool> deleteApuntes(String s, String text, String text2) async {
     try {
-      bool respuesta = await UserServices().eliminarApuntes(s, text, text2);
+      bool respuesta = await ApuntesService().eliminarApuntes(s, text, text2);
       if (respuesta) {
         notifyListeners();
       }
@@ -99,33 +96,11 @@ class AppState with ChangeNotifier {
 
   Future<List<NoteTopic>> obtenerApuntes(String user) async {
     try {
-      _apuntes = await UserServices().getApuntesTopic(user);
+      _apuntes = await ApuntesService().getApuntesTopic(user);
       return _apuntes;
     } catch (e) {
       return _apuntes;
     }
   }
 
-  Future<bool> saveCalificacionContenido(
-      String text, String text2, double valor, String text3) async {
-    try {
-      bool respuesta = await RatingServices()
-          .saveValoracionContenido(text, text2, valor, text3);
-      if (respuesta) {
-        notifyListeners();
-      }
-      return respuesta;
-    } catch (e) {
-      return false;
-    }
-  }
-
-  Future<List<ContentRating>> obtenerValoracionContenido(String user) async {
-    try {
-      _calificacionList = await RatingServices().getValoracionContenido(user);
-      return _calificacionList;
-    } catch (e) {
-      return _calificacionList;
-    }
-  }
 }

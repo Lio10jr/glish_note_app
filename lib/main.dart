@@ -1,10 +1,10 @@
 import 'dart:async';
 import 'dart:convert';
 
+import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/services.dart' as rootBundle;
-import 'package:glish_note_app/data/sqlite3/sqlite.dart';
 import 'package:glish_note_app/pages/auth/login.dart';
 import 'package:glish_note_app/pages/auth/verify_email_page.dart';
 import 'package:glish_note_app/shared/models/content_page.dart';
@@ -22,9 +22,9 @@ Future<void> main() async {
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
-
-  // Inicializar Sqlite3
-  SqliteDatabase().initDatabase();
+  
+  // Habilitar la persistencia de Firebase
+  FirebaseDatabase.instance.setPersistenceEnabled(true);
 
   runApp(
     ChangeNotifierProvider(

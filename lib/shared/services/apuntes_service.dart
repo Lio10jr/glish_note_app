@@ -1,7 +1,7 @@
 import 'package:firebase_database/firebase_database.dart';
 import 'package:glish_note_app/shared/models/note_topic.dart';
 
-class UserServices {
+class ApuntesService {
 
   Future<bool> saveApuntesTopic(
       String email, String tema, String contenido) async {
@@ -23,8 +23,9 @@ class UserServices {
     List<NoteTopic> listt = [];
     String name = "Apuntes_Usuario";
     try {
-      DataSnapshot sna =
-          await FirebaseDatabase.instance.ref().child(name).get();
+      final ref = FirebaseDatabase.instance.ref(name);
+      ref.keepSynced(false);
+      DataSnapshot sna = await ref.get();
 
       for (DataSnapshot sn in sna.children) {
         if (email == sn.child('Email').value.toString()) {

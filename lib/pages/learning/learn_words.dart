@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:glish_note_app/shared/consts/colors.dart';
 import 'package:glish_note_app/shared/models/verbs_data_model.dart';
-import 'package:glish_note_app/shared/services/sqlite/verbs_data.dart';
 import 'package:glish_note_app/shared/services/verbs_services.dart';
 import 'package:glish_note_app/shared/widgets/title_icon.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -22,7 +21,6 @@ class _LearnWordsState extends State<LearnWords> {
   int intentos = 10;
   int verbsAprendidos = 0;
   List<VerbsDateModel> listVerbs = [];
-  late bool loading = true;
   int porc = 0;
   int porc2 = 0;
   int porc3 = 0;
@@ -30,21 +28,14 @@ class _LearnWordsState extends State<LearnWords> {
   @override
   void initState() {
     super.initState();
-    getVerb();
+    getVerbs();
   }
 
-  getVerb() async {
-    final verbService = VerbsServices();
-    final verbDataService = VerbsDataService();
-
-    var lista = verbDataService.getVerbs();
-
-    if ( lista.isEmpty ) {
-      lista = await verbService.getVerbs();
-    }
-    setState(() {
-      listVerbs = lista;
-      loading = false;
+  getVerbs() {
+    VerbsServices().getVerbs().then((data) =>{
+      setState(() {
+        listVerbs = data;
+      })
     });
   }
 
@@ -116,7 +107,7 @@ class _LearnWordsState extends State<LearnWords> {
               ),
             ),
           ),
-          child: loading 
+          child: listVerbs.isEmpty 
           ? Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [

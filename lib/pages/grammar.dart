@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:glish_note_app/pages/content_title_page.dart';
 import 'package:glish_note_app/shared/consts/colors.dart';
 import 'package:glish_note_app/shared/models/content_page.dart';
-import 'package:glish_note_app/shared/models/content_rating.dart';
 import 'package:glish_note_app/shared/widgets/text_title.dart';
 import 'package:glish_note_app/shared/widgets/title_icon.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -17,9 +16,7 @@ class Grammar extends StatefulWidget {
 }
 
 class GrammarState extends State<Grammar> {
-  List<ContentRating> list = [];
   final user = FirebaseAuth.instance.currentUser!;
-  ContentRating? contenidoo;
 
   @override
   Widget build(BuildContext context) {

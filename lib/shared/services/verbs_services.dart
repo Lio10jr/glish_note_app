@@ -47,9 +47,10 @@ class VerbsServices {
     List<VerbsDateModel> listt = [];
     String name = "Verbs";
     try {
+      final ref = FirebaseDatabase.instance.ref(name);
+      ref.keepSynced(false);
       DataSnapshot sna =
-          await FirebaseDatabase.instance.ref().child(name).get();
-
+          await ref.get();
       for (DataSnapshot verb in sna.children) {
         VerbsDateModel verbObj = VerbsDateModel(
             key: verb.key.toString(),
