@@ -49,8 +49,7 @@ class ListNotePageState extends State<ListNotePage> {
           titulo: "Aquí puedes ver todas tus notas",
         ),
       ),
-      body: Stack(
-        children: [
+      body: Stack(children: [
         Container(
           width: MediaQuery.of(context).size.width * 1.0,
           margin: const EdgeInsets.only(top: 0, left: 10, right: 10),
@@ -63,11 +62,16 @@ class ListNotePageState extends State<ListNotePage> {
             ),
           ),
           child: TextButton(
-              onPressed: () {
-                Navigator.push(
+              onPressed: () async {
+                final res = await Navigator.push(
                     context,
                     MaterialPageRoute(
                         builder: (context) => const AddNotePage()));
+                if (res) {
+                  setState(() {
+                    getData();
+                  });
+                }
               },
               child: Text(
                 'Agrega nueva nota aquí!',
@@ -84,100 +88,142 @@ class ListNotePageState extends State<ListNotePage> {
           child: RefreshIndicator(
             color: ColorsConsts.white,
             backgroundColor: ColorsConsts.primarybackground,
-            onRefresh: () async {
-              setState(() { });
-              return Future<void>.delayed(getData());
-            },
+            onRefresh: _refresh,
             child: FutureBuilder<List<NoteTopic>>(
-            future: listFuture,
+              future: listFuture,
               builder: (BuildContext context,
-              AsyncSnapshot<List<NoteTopic>> snapshot) {
-              if (snapshot.connectionState == ConnectionState.waiting) {
-                return Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    CircularProgressIndicator(
-                      backgroundColor: ColorsConsts.primarybackground,
-                      color: ColorsConsts.endColor,
-                    ),
-                    Text(
-                      'Cargando...',
-                      style: GoogleFonts.ubuntu(
-                        fontSize: 13, 
-                        fontWeight: FontWeight.w300
-                      ) 
-                    )
-                  ],
-                );
-              } else if (snapshot.hasError) {
-                return Text("Error: ${snapshot.error}");
-              } else {
-                misApuntes = snapshot.data ?? [];
-                return ListView(
-                    padding: const EdgeInsets.symmetric(vertical: 20),                    
+                  AsyncSnapshot<List<NoteTopic>> snapshot) {
+                if (snapshot.connectionState == ConnectionState.waiting) {
+                  return Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
-                      for (NoteTopic apuntes in misApuntes)
-                        Dismissible(
-                          key: Key(apuntes.key.toString()),
-                          direction: DismissDirection.startToEnd,
-                          background: Container(
-                              color: Colors.redAccent,
-                              child: const Align(
-                                alignment: Alignment.centerLeft,
-                                child: Icon(Icons.delete, size: 20),
-                              )),
-                          onDismissed: (direction) async {
-                            bool resul = await AppState().deleteApuntes(
-                                apuntes.key.toString(),
-                                user.email!,
-                                apuntes.tema);
-                            if (resul) {
-                              ScaffoldMessenger.of(context)
-                                  .showSnackBar(const SnackBar(
-                                content: Text("Apunte eliminado correctamente"),
-                                backgroundColor: Colors.red,
-                              ));
-                            } else {
-                              ScaffoldMessenger.of(context)
-                                  .showSnackBar(const SnackBar(
-                                content: Text("A ocurrido un error"),
-                                backgroundColor: Colors.red,
-                              ));
-                            }
-                          },
-                          child: ListTile(
-                            tileColor: Theme.of(context).cardTheme.color,
+                      CircularProgressIndicator(
+                        backgroundColor: ColorsConsts.primarybackground,
+                        color: ColorsConsts.endColor,
+                      ),
+                      Text('Cargando...',
+                          style: GoogleFonts.ubuntu(
+                              fontSize: 13, fontWeight: FontWeight.w300))
+                    ],
+                  );
+                } else if (snapshot.hasError) {
+                  return Text("Error: ${snapshot.error}");
+                } else {
+                  misApuntes = snapshot.data ?? [];
+                  return ListView.builder(
+                      padding: const EdgeInsets.symmetric(vertical: 20),
+                      itemCount: misApuntes.length,
+                      cacheExtent: 100.0,
+                      itemBuilder: (BuildContext context, int index) {
+                        // print(misApuntes[index].tema);
+                        // final nota = misApuntes[index];
+                        return ListTile(
+                            leading: const Icon(Icons.notes),
                             title: Text(
-                              apuntes.tema,
-                              style: const TextStyle(
-                                  fontSize: 15, fontWeight: FontWeight.bold),
-                            ),
-                            subtitle: Text(
-                              apuntes.contenido,
+                              misApuntes[index].tema,
                               maxLines: 1,
+                              textAlign: TextAlign.start,
                               overflow: TextOverflow.ellipsis,
-                              style: const TextStyle(fontSize: 15),
+                              style: const TextStyle(
+                                fontSize: 15,
+                                fontWeight: FontWeight.bold,
+                              ),
                             ),
-                            trailing: IconButton(
-                              icon: const Icon(Icons.edit),
-                              onPressed: () {
-                                Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                        builder: (context) =>
-                                            EditNotePage(apuntes: apuntes)));
-                              },
-                            ),
-                          ),
-                        )
-                    ]);
-              }
-            },
+                            onLongPress: () async {
+                              showDialog(
+                                  context: context,
+                                  builder: (BuildContext context) =>
+                                      AlertDialog(
+                                        title: Text(
+                                          'Eliminar',
+                                          style: GoogleFonts.ubuntu(
+                                              fontSize: 15,
+                                              fontWeight: FontWeight.w300,
+                                              color: Colors.red),
+                                        ),
+                                        content: const Text(
+                                            '¿Estás seguro que deseas eliminar la nota?'),
+                                        actions: [
+                                          TextButton(
+                                            onPressed: () => Navigator.pop(
+                                                context, 'Cancel'),
+                                            child: Text(
+                                              'Cancelar',
+                                              style: GoogleFonts.ubuntu(
+                                                  fontSize: 15,
+                                                  fontWeight: FontWeight.w300,
+                                                  color:
+                                                      ThemeData().primaryColor),
+                                            ),
+                                          ),
+                                          TextButton(
+                                            onPressed: () async {
+                                              bool result = await AppState()
+                                                  .deleteApuntes(
+                                                      misApuntes[index]
+                                                          .key
+                                                          .toString(),
+                                                      user.email!,
+                                                      misApuntes[index].tema);
+                                              if (result) {
+                                                ScaffoldMessenger.of(context)
+                                                    .showSnackBar(SnackBar(
+                                                  content: const Text(
+                                                      "Eliminado correctamente"),
+                                                  backgroundColor: ColorsConsts
+                                                      .msgValidbackground,
+                                                ));
+                                                setState(() {
+                                                  getData();
+                                                });
+                                              } else {
+                                                ScaffoldMessenger.of(context)
+                                                    .showSnackBar(SnackBar(
+                                                  content: const Text(
+                                                      "Algo salio mal"),
+                                                  backgroundColor: ColorsConsts
+                                                      .msgErrbackground,
+                                                ));
+                                              }
+                                              Navigator.pop(context, 'OK');
+                                            },
+                                            child: const Text(
+                                              'Si',
+                                              style:
+                                                  TextStyle(color: Colors.red),
+                                            ),
+                                          ),
+                                        ],
+                                      ));
+                            },
+                            onTap: () async {
+                              final res = await Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) => EditNotePage(
+                                          apuntes: misApuntes[index])));
+                              if (res) {
+                                setState(() {
+                                  getData();
+                                });
+                              }
+                            });
+                      });
+                }
+              },
             ),
           ),
         ),
       ]),
     );
+  }
+
+  Future<void> _refresh() async {
+    await Future.delayed(const Duration(seconds: 2));
+    setState(() {
+      getData();
+    });
+    // return Future.delayed(Duration(seconds: 3, ));
   }
 }

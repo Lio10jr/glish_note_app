@@ -1,10 +1,12 @@
+import 'dart:convert';
+
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:glish_note_app/shared/consts/colors.dart';
 import 'package:glish_note_app/shared/models/note_topic.dart';
 import 'package:glish_note_app/shared/services/app_state.dart';
 import 'package:glish_note_app/shared/widgets/text_title.dart';
-import 'package:glish_note_app/shared/widgets/title.dart';
+import 'package:flutter_quill/flutter_quill.dart' as quill;
 
 // ignore: must_be_immutable
 class EditNotePage extends StatefulWidget {
@@ -16,17 +18,25 @@ class EditNotePage extends StatefulWidget {
 }
 
 class EditNotePageState extends State<EditNotePage> {
-  TextEditingController textControlador = TextEditingController();
-  TextEditingController textTemaControlador = TextEditingController();
-  final GlobalKey<FormState> _formularioKey = GlobalKey<FormState>();
+  TextEditingController _tituloController = TextEditingController();
   final user = FirebaseAuth.instance.currentUser!;
+  final _controller = quill.QuillController.basic();
+
+  bool res = false;
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
 
   @override
   void initState() {
     super.initState();
     setState(() {
-      textTemaControlador.text = widget.apuntes.tema;
-      textControlador.text = widget.apuntes.contenido;
+      _tituloController.text = widget.apuntes.tema;
+      final json = jsonDecode(widget.apuntes.contenido);
+      _controller.document = quill.Document.fromJson(json);
     });
   }
 
@@ -37,192 +47,116 @@ class EditNotePageState extends State<EditNotePage> {
         FocusScope.of(context).requestFocus(FocusNode());
       },
       child: Scaffold(
-        appBar: const PreferredSize( 
-          preferredSize: Size.fromHeight(200.0),
-          child: TitleWidget(tema: "Aquí puedes corregir una nota"),
+        appBar: PreferredSize(
+          preferredSize: const Size.fromHeight(200.0),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceAround,
+            mainAxisSize: MainAxisSize.max,
+            children: [
+              Container(
+                  width: MediaQuery.of(context).size.width * 0.5,
+                  padding: const EdgeInsets.only(top: 50, bottom: 50),
+                  child: TextTitle(
+                      color: ColorsConsts.primarybackground,
+                      size: 30,
+                      fontw: FontWeight.w500,
+                      titulo: 'Editar nota')),
+              Ink(
+                decoration: ShapeDecoration(
+                  color: ColorsConsts.primarybackground,
+                  shape: const CircleBorder(),
+                ),
+                child: IconButton(
+                    onPressed: () async {
+                      String titulo = _tituloController.text;
+
+                      if (!_controller.document.isEmpty() &&
+                          titulo.isNotEmpty) {
+                        final json =
+                            jsonEncode(_controller.document.toDelta().toJson());
+
+                        bool result = await AppState().editNota(
+                            widget.apuntes.key.toString(), titulo, json);
+                        if (result) {
+                          res = true;
+                          Navigator.pop(context, res);
+                          ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                            content: const Text("Agregado correctamente"),
+                            backgroundColor: ColorsConsts.msgValidbackground,
+                          ));
+                        } else {
+                          Navigator.pop(context, res);
+                          ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                            content: const Text("Algo salio mal"),
+                            backgroundColor: ColorsConsts.msgErrbackground,
+                          ));
+                        }
+                      } else if (!_controller.document.isEmpty() &&
+                          titulo.isEmpty) {
+                        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                          content: const Text("Ingrese el titulo"),
+                          backgroundColor: ColorsConsts.msgErrbackground,
+                        ));
+                      } else {
+                        Navigator.pop(context, res);
+                      }
+                    },
+                    icon: const Icon(
+                      Icons.arrow_back_ios_sharp,
+                      color: Colors.white,
+                      size: 30,
+                    )),
+              )
+            ],
+          ),
         ),
-        body: SingleChildScrollView(
-          physics: const ScrollPhysics(),
-          child: Container(
-            margin: const EdgeInsets.symmetric(horizontal: 20),
-            decoration: const BoxDecoration(
-              border: Border(
-                top: BorderSide(
-                  color: Colors.purple,
-                  width: 1.5,
+        body: Container(
+          margin: const EdgeInsets.only(right: 20, left: 20, bottom: 85),
+          decoration: const BoxDecoration(
+            border: Border(
+              top: BorderSide(
+                color: Colors.purple,
+                width: 1.5,
+              ),
+            ),
+          ),
+          child: Column(
+            children: [
+              TextField(
+                controller: _tituloController,
+                decoration: InputDecoration(
+                  labelText: "Titulo",
+                  labelStyle: TextStyle(
+                    color: Theme.of(context).primaryColor,
+                  ),
+                  hintText: "Escribe aqui!",
+                ),
+                cursorColor: ColorsConsts.endColor,
+                maxLines: 1,
+              ),
+              quill.QuillSimpleToolbar(
+                controller: _controller,
+                configurations: const quill.QuillSimpleToolbarConfigurations(
+                    multiRowsDisplay: false,
+                    customButtons: [
+                      quill.QuillToolbarCustomButtonOptions(),
+                    ]),
+              ),
+              Expanded(
+                child: Container(
+                  padding: const EdgeInsets.all(8),
+                  decoration: BoxDecoration(
+                    color: ColorsConsts.primarybackground,
+                    borderRadius: BorderRadius.circular(20)
+                  ),
+                  child: quill.QuillEditor.basic(
+                    controller: _controller,
+                    configurations: const quill.QuillEditorConfigurations(
+                    ),
+                  ),
                 ),
               ),
-            ),
-            child: Form(
-              key: _formularioKey,
-              child: Column(
-                children: [
-                  Container(
-                    padding: const EdgeInsets.only(left: 10, right: 10),
-                    margin: const EdgeInsets.only(top: 25),
-                    child: TextFormField(
-                      controller: textTemaControlador,
-                      decoration: InputDecoration(
-                        labelText: "Titulo",
-                          labelStyle: TextStyle(
-                            color: Theme.of(context).primaryColor,
-                          ),
-                        hintText: "Escribe aqui!",
-                      ),
-                      cursorColor: ColorsConsts.endColor,
-                      maxLines: 1,
-                      validator: (String? date) {
-                        if (date!.isEmpty) {
-                          return "Este campo es requerido";
-                        }
-                        return null;
-                      },
-                      keyboardType: TextInputType.multiline,
-                      textCapitalization: TextCapitalization.sentences,
-                    ),
-                  ),
-                  const SizedBox(
-                    height: 25,
-                  ),
-                  Container(
-                    height: 200,
-                    padding: const EdgeInsets.only(left: 10, right: 10),
-                    decoration: BoxDecoration(
-                      color: ColorsConsts.primarybackground,
-                      borderRadius: BorderRadius.circular(20),
-                    ),
-                    margin: const EdgeInsets.only(bottom: 30.0),
-                    child: TextFormField(
-                      controller: textControlador,
-                      decoration: InputDecoration(
-                          labelText: "Nota",
-                          labelStyle: TextStyle(
-                            color: Theme.of(context).primaryColor,
-                          ),
-                          hintText: "Escribe aqui tus notas",
-                          border: InputBorder.none),
-                      cursorColor: ColorsConsts.endColor,
-                      maxLines: null,
-                      validator: (String? date) {
-                        if (date!.isEmpty) {
-                          return "Este campo es requerido";
-                        }
-                        return null;
-                      },
-                      keyboardType: TextInputType.multiline,
-                      textCapitalization: TextCapitalization.sentences,
-                    ),
-                  ),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    children: [
-                      ClipRRect(
-                        borderRadius: BorderRadius.circular(4),
-                        child: Stack(
-                          children: <Widget>[
-                            Positioned.fill(
-                              child: Container(
-                                decoration: const BoxDecoration(
-                                  gradient: LinearGradient(
-                                    colors: <Color>[
-                                      Color(0xFFA10D0D),
-                                      Color(0xFFD21919),
-                                      Color(0xFFF54242),
-                                    ],
-                                  ),
-                                ),
-                              ),
-                            ),
-                            TextButton(
-                              style: TextButton.styleFrom(
-                                foregroundColor: Colors.white,
-                                padding:
-                                    const EdgeInsets.only(left: 20, right: 20),
-                              ),
-                              onPressed: () {
-                                Navigator.pop(context);
-                                ScaffoldMessenger.of(context)
-                                    .showSnackBar(const SnackBar(
-                                  content: Text("Proceso cancelado"),
-                                ));
-                                setState(() {
-                                  textControlador.text = "";
-                                  textTemaControlador.text = "";
-                                });
-                              },
-                              child: TextTitle(
-                                  color: ColorsConsts.white,
-                                  size: 15,
-                                  fontw: FontWeight.w500,
-                                  titulo: "Cancelar"),
-                            ),
-                          ],
-                        ),
-                      ),
-                      ClipRRect(
-                        borderRadius: BorderRadius.circular(4),
-                        child: Stack(
-                          children: <Widget>[
-                            Positioned.fill(
-                              child: Container(
-                                decoration: const BoxDecoration(
-                                  gradient: LinearGradient(
-                                    colors: <Color>[
-                                      Color(0xFF0D47A1),
-                                      Color(0xFF1976D2),
-                                      Color(0xFF42A5F5),
-                                    ],
-                                  ),
-                                ),
-                              ),
-                            ),
-                            TextButton(
-                              style: TextButton.styleFrom(
-                                foregroundColor: Colors.white,
-                                padding:
-                                    const EdgeInsets.only(left: 20, right: 20),
-                              ),
-                              onPressed: () async {
-                                if (_formularioKey.currentState!.validate()) {
-                                  Navigator.pop(context);
-                                  bool result = await AppState()
-                                      .editNota(
-                                    widget.apuntes.key.toString(),
-                                    textTemaControlador.text,
-                                    textControlador.text
-                                  );
-                                  if (result) {
-                                    ScaffoldMessenger.of(context)
-                                        .showSnackBar(SnackBar(
-                                      content:
-                                          const Text("Actualizado correctamente"),
-                                      backgroundColor:
-                                          ColorsConsts.msgValidbackground,
-                                    ));
-                                  } else {
-                                    ScaffoldMessenger.of(context)
-                                        .showSnackBar(SnackBar(
-                                      content: const Text("Algo salio mal"),
-                                      backgroundColor:
-                                          ColorsConsts.msgErrbackground,
-                                    ));
-                                  }
-                                }
-                              },
-                              child: TextTitle(
-                                  color: ColorsConsts.white,
-                                  size: 15,
-                                  fontw: FontWeight.w500,
-                                  titulo: "Agregar"),
-                            ),
-                          ],
-                        ),
-                      ),
-                    ],
-                  )
-                ],
-              ),
-            ),
+            ],
           ),
         ),
       ),

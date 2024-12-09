@@ -30,7 +30,7 @@ class VerbsPageState extends State<VerbsPage> {
         appBar: const PreferredSize(
           preferredSize: Size.fromHeight(200.0),
           child: TitleIcon(
-            titulo: "Conjugación de Verbos. Genial!",
+            titulo: "Verbos regulares e irregulares!",
           ),
         ),
         body: Stack(children: [
