@@ -148,13 +148,13 @@ class StatepagTranslation extends State<PageTranslation> {
                           onChanged: (String? newValue) {
                             setState(() {
                               combo = newValue!;
-                              if (combo != "Español") {
-                                idomaTranslation = "Ingles";
+                              if (combo == "Ingles") {
+                                idomaTranslation = "Español";
                                 idiomE = 'en';
                                 idiomS = 'es';
                                 selectedLanguage = 'en';
-                              } else if (combo != "Ingles") {
-                                idomaTranslation = "Español";
+                              } else if (combo == "Español") {
+                                idomaTranslation = "Ingles";
                                 idiomE = 'es';
                                 idiomS = 'en';
                                 selectedLanguage = 'es';
