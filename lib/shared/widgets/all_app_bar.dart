@@ -70,37 +70,32 @@ class AllAppBarLogState extends State<AllAppBarLog> {
             mainAxisSize: MainAxisSize.max,
             children: [
               Container(
-                  width: MediaQuery.of(context).size.width * 0.5,
                   padding: const EdgeInsets.only(top: 50, bottom: 50),
                   child: TextTitle(
                       color: ColorsConsts.primarybackground,
                       size: 30,
                       fontw: FontWeight.w500,
-                      titulo: "Hola $name")),
-              const SizedBox(
-                width: 50,
-                height: 50,
-                child: CircleAvatar(
-                  radius: 120,
-                  backgroundImage: AssetImage('assets/note_pencil.png'),
-                  backgroundColor: Colors.transparent,
+                      titulo: "Hola")),
+              Container(
+                padding: const EdgeInsets.only(top: 50, bottom: 50),
+                child: Text(
+                  name,
+                  style: const TextStyle(fontSize: 30, fontWeight: FontWeight.w500),
                 ),
-              ),
+              )
             ],
           ),
         ),
         SizedBox(
-           width: MediaQuery.of(context).size.width * 0.9,
+          width: MediaQuery.of(context).size.width * 0.9,
           height: MediaQuery.of(context).size.height * 0.1,
           child: Text(
             "Explora la riqueza de contenido que hemos preparado para ti!",
             textAlign: TextAlign.center,
             style: GoogleFonts.ubuntu(
-                fontSize: 20,
-                fontWeight: FontWeight.w500,
-                color: ColorsConsts.subTitle,
-                ),
-                
+              fontSize: 20,
+              fontWeight: FontWeight.w400,
+            ),
           ),
         ),
       ],

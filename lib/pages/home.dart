@@ -6,7 +6,9 @@ import 'package:glish_note_app/pages/notes/list_note_page.dart';
 import 'package:glish_note_app/pages/verbs_page.dart';
 import 'package:glish_note_app/pages/vocabulary/vocabulary.dart';
 import 'package:glish_note_app/shared/widgets/all_app_bar.dart';
+import 'package:glish_note_app/themes/theme_provider.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:provider/provider.dart';
 
 const IconData facebook = IconData(0xe255, fontFamily: 'MaterialIcons');
 
@@ -32,48 +34,52 @@ class HomeState extends State<Home> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Container(
-        decoration: BoxDecoration(
-          gradient: LinearGradient(
-            begin: const Alignment(0.0, 0.0),
-            end: const Alignment(0.25, 0.50),
-            colors: <Color>[
-              const Color(0xFFFFE162),
-              backgroundColors[_currentPage],
+      body: Consumer<ThemeProvider>(
+        builder: (context, themeProider, child) {
+        return Container(
+          decoration: BoxDecoration(
+            gradient: LinearGradient(
+              begin: const Alignment(0.0, 0.0),
+              end: const Alignment(0.25, 0.50),
+              colors: <Color>[
+                themeProider.isSelected ? Colors.black : Colors.white,
+                backgroundColors[_currentPage],
+              ],
+            ),
+          ),
+          child: Column(
+            children: [
+              const AllAppBarLog(),
+              const SizedBox(height: 16.0),
+              Expanded(
+                child: Container(
+                  padding: EdgeInsets.only(bottom: Platform.isAndroid ? 130 : 0,),
+                  child: PageView(
+                    controller: PageController(
+                      viewportFraction: 0.8,
+                    ),
+                    onPageChanged: (newPage) {
+                      setState(() {
+                        _currentPage = newPage;
+                      });
+                    },
+                    children: [
+                      animatedPaddingPage(context, "Contenidos", const Grammar(), 0,
+                          const Color(0xFFFFD640), "contenido.png"),
+                      animatedPaddingPage(context, "Vocabulario", const Vocabulary(), 1,
+                          const Color(0xFFFF5252), "vocabulario.png"),
+                      animatedPaddingPage(context, "Verbos", const VerbsPage(), 2,
+                          const Color(0xF94489FF), "verbos.png"),
+                      animatedPaddingPage(context, "Notas", const ListNotePage(), 3,
+                          const Color(0xFF69F0AF), "notas.png"),
+                    ],
+                  ),
+                ),
+              )
             ],
           ),
-        ),
-        child: Column(
-          children: [
-            const AllAppBarLog(),
-            const SizedBox(height: 16.0),
-            Expanded(
-              child: Container(
-                padding: EdgeInsets.only(bottom: Platform.isAndroid ? 130 : 0,),
-                child: PageView(
-                  controller: PageController(
-                    viewportFraction: 0.8,
-                  ),
-                  onPageChanged: (newPage) {
-                    setState(() {
-                      _currentPage = newPage;
-                    });
-                  },
-                  children: [
-                    animatedPaddingPage(context, "Contenidos", const Grammar(), 0,
-                        const Color(0xFFFFD640), "contenido.png"),
-                    animatedPaddingPage(context, "Vocabulario", const Vocabulary(), 1,
-                        const Color(0xFFFF5252), "vocabulario.png"),
-                    animatedPaddingPage(context, "Verbos", const VerbsPage(), 2,
-                        const Color(0xF94489FF), "verbos.png"),
-                    animatedPaddingPage(context, "Notas", const ListNotePage(), 3,
-                        const Color(0xFF69F0AF), "notas.png"),
-                  ],
-                ),
-              ),
-            )
-          ],
-        ),
+        );
+        }
       ),
     );
   }
@@ -93,14 +99,15 @@ class HomeState extends State<Home> {
             margin: const EdgeInsets.only(
               right: 30,
             ),
-            decoration: const BoxDecoration(
-              boxShadow: [
+            decoration: BoxDecoration(
+              boxShadow: const [
                 BoxShadow(
                   color: Color(0x54FFFFFF),
                   offset: Offset(1, 1),
                   blurRadius: 2,
                 )
               ],
+              borderRadius: BorderRadius.circular(20)
             ),
             child: Padding(
               padding: const EdgeInsets.all(7.0),
