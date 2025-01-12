@@ -1,84 +1,77 @@
 # Glish Note App
+<div align="center">
+   <img src="https://github.com/user-attachments/assets/a62fe8ea-32d1-4584-94d3-7244ee9662d5" alt="Portada" width="600">
+</div>
 
-A new Flutter project.
+## Índice
 
-## **Features**
+- [Descripción](#descripción)
+- [Características](#características)
+- [Capturas de Pantalla](#capturas-de-pantalla)
+- [Instalación](#instalación)
+- [Configuración de Firebase](#configuración-de-firebase)
+- [Tecnologías Utilizadas](#tecnologías-utilizadas)
+- [Licencia](#licencia)
+- [Contacto](#contacto)
 
-- User authentication via Firebase
-- Note creation and management
-- Text-to-speech functionality for traductions
-- Text translation using Google Translator
-- Theme switching
-- Push notifications using Firebase
-- Local storage with SQLite
-- App rating dialog
+## Descripción
 
-## **Screenshots**
+Glish Note App es una aplicación desarrollada en Flutter que permite a los usuarios crear y gestionar notas con funcionalidades adicionales como traducción de texto y conversión de texto a voz. Está diseñada para ser intuitiva y eficiente, ofreciendo una experiencia de usuario fluida.
 
-<!-- ![Login Screen](path/to/login_screenshot.png)
-![Home Screen](path/to/home_screenshot.png) -->
+## Características
 
-## **Installation**
+- **Autenticación de Usuarios**: Integración con Firebase para el registro y autenticación de usuarios.
+- **Gestión de Notas**: Creación, edición y eliminación de notas.
+- **Traducción de Texto**: Utiliza Google Translator para traducir texto en tiempo real.
+- **Conversión de Texto a Voz**: Convierte texto a audio para facilitar la comprensión.
+- **Cambio de Tema**: Alterna entre temas claro y oscuro.
+- **Notificaciones Push**: Implementadas con Firebase para mantener al usuario informado.
+- **Almacenamiento Local**: Uso de SQLite para almacenar datos localmente.
+- **Diálogo de Valoración**: Solicita al usuario que valore la aplicación.
 
-1. Clone the repository:
+## Capturas de Pantalla
+
+<img src="https://github.com/user-attachments/assets/9f530e76-f283-48c9-93a8-af3583a25db6" alt="Verbos y Gramática" width="300">
+
+<img src="https://github.com/user-attachments/assets/501013ec-0509-4120-95e6-d19766cc762b" alt="Vista de vocabulario y notas" width="300">
+
+<img src="https://github.com/user-attachments/assets/1943e836-09bb-4dd5-adc5-54373beb7662" alt="Funcionalidad de traducción de texto en acción y test de vocabulario" width="300">
+
+## Instalación
+
+1. **Clona el repositorio**:
 
    ```bash
    git clone https://github.com/Lio10jr/glish_note_app.git
    ```
-
-2. Navigate to the project directory:
+2. **ega al directorio del proyecto**:
 
    ```bash
    cd glish_note_app
    ```
-
-3. Install the dependencies:
+3. **Instala las dependencias**:
 
    ```bash
    flutter pub get
    ```
+4. **Ejecuta la aplicación**:
 
-4. Run the app:
    ```bash
    flutter run
    ```
 
-## **Configuración de Firebase**
+## Configuración de Firebase
+1. **Instala Firebase CLI**: Si no lo tienes instalado, sigue las instrucciones oficiales de Firebase.
+2. **Configura Firebase en el proyecto**: Utiliza FlutterFire CLI para integrar Firebase con tu aplicación. Sigue la documentación oficial para una configuración detallada.
 
-1. Have Firebase CLI installed, if not [Install Firabase CLI](https://firebase.google.com/docs/cli?hl=es-419#setup_update_cli){:target="\_blank"}
+## Tecnologías Utilizadas
+- Flutter - Framework para desarrollo de aplicaciones móviles.
+- Firebase - Plataforma para backend y autenticación.
+- Google Translator API - Servicio de traducción de texto.
+- SQLite - Base de datos para almacenamiento local.
 
-2. Have FlutterFire CLI installed, if not [Install Firabase CLI](https://firebase.google.com/docs/flutter/setup?hl=es-419&platform=android){:target="\_blank"}
+## Licencia
+Este proyecto está bajo la Licencia MIT. Consulta el archivo LICENSE para más detalles.
 
-3. From your Flutter project directory, install the firebase library:
-
-   ```bash
-       flutter pub add firebase_core
-   ```
-
-4. From your Flutter project directory, run the command for configure firebase in your project:
-
-   ```bash
-   flutterfire configure
-   ```
-
-5. In te file `lib/main.dart`, Do the following import:
-
-   ```bash
-       import 'package:firebase_core/firebase_core.dart';
-       import 'firebase_options.dart';
-   ```
-
-6. In te file `lib/main.dart`, initialize Firebase with the following code:
-
-   ```bash
-       await Firebase.initializeApp(
-           options: DefaultFirebaseOptions.currentPlatform,
-       );
-   ```
-
-7. Run the app:
-
-   ```bash
-       flutter run
-   ```
-
+## Contacto
+Desarrollado por Kevin Zambrano. Si tienes alguna pregunta o sugerencia, no dudes en contactarme a través de kevinzambrano593@gmail.
